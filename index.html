@@ -1,0 +1,3034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Refinery Analytics Dashboard - Real-Time Crude Oil Profitability</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0f2027 0%, #203a43 50%, #2c5364 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+        
+        /* Navigation */
+        .nav-header {
+            background: rgba(0, 0, 0, 0.9);
+            padding: 20px;
+            box-shadow: 0 2px 20px rgba(0,0,0,0.3);
+        }
+        
+        .nav-content {
+            max-width: 1400px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8em;
+            font-weight: 300;
+            color: white;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+        }
+        
+        .nav-buttons {
+            display: flex;
+            gap: 15px;
+        }
+        
+        .nav-btn {
+            padding: 10px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1em;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        
+        .nav-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        /* Main Dashboard Container */
+        .dashboard-container {
+            max-width: 1400px;
+            margin: 30px auto;
+            padding: 0 20px;
+        }
+        
+        /* Market Status Bar */
+        .market-status {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .market-status-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .status-title {
+            font-size: 1.4em;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        .live-indicator {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            background: #e8f5e9;
+            border-radius: 20px;
+        }
+        
+        .live-dot {
+            width: 10px;
+            height: 10px;
+            background: #4caf50;
+            border-radius: 50%;
+            animation: pulse 2s infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.3; }
+        }
+        
+        .market-prices {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+        }
+        
+        .price-card {
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+        }
+        
+        .price-label {
+            font-size: 0.9em;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .price-value {
+            font-size: 1.4em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .price-change {
+            font-size: 0.85em;
+            margin-top: 5px;
+        }
+        
+        .price-up {
+            color: #4caf50;
+        }
+        
+        .price-down {
+            color: #f44336;
+        }
+        
+        /* Hot Crudes Section */
+        .hot-crudes-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin-bottom: 30px;
+        }
+        
+        .hot-crudes-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .hot-crudes-title {
+            font-size: 1.8em;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .fire-icon {
+            color: #ff6b6b;
+            animation: flicker 2s infinite;
+        }
+        
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+        
+        .update-timer {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px 20px;
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+        
+        .timer-text {
+            color: #666;
+            font-size: 0.9em;
+        }
+        
+        .countdown {
+            font-weight: bold;
+            color: #667eea;
+            font-size: 1.1em;
+        }
+        
+        /* Ranking Cards */
+        .rankings-grid {
+            display: grid;
+            gap: 20px;
+        }
+        
+        .rank-card {
+            display: grid;
+            grid-template-columns: auto 1fr auto auto auto;
+            align-items: center;
+            gap: 20px;
+            padding: 20px;
+            background: #f8f9fa;
+            border-radius: 12px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            border: 2px solid transparent;
+        }
+        
+        .rank-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            background: white;
+            border-color: #667eea;
+        }
+        
+        .rank-number {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+        
+        .rank-1 { background: linear-gradient(135deg, #FFD700, #FFA500); color: white; }
+        .rank-2 { background: linear-gradient(135deg, #C0C0C0, #808080); color: white; }
+        .rank-3 { background: linear-gradient(135deg, #CD7F32, #8B4513); color: white; }
+        .rank-default { background: #e0e0e0; color: #666; }
+        
+        .crude-info {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .crude-name {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+        
+        .crude-details {
+            display: flex;
+            gap: 15px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        
+        .detail-badge {
+            padding: 3px 8px;
+            background: #e8f4fd;
+            border-radius: 5px;
+            font-size: 0.85em;
+        }
+        
+        .profit-metric {
+            text-align: center;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+        }
+        
+        .metric-label {
+            font-size: 0.8em;
+            color: #999;
+            margin-bottom: 5px;
+        }
+        
+        .metric-value {
+            font-size: 1.3em;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+        
+        .profit-amount {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #4caf50;
+        }
+        
+        /* Charts Section */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+        
+        .chart-container {
+            background: white;
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+        
+        .chart-wrapper {
+            position: relative;
+            height: 300px;
+        }
+        
+        /* Info Cards */
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        
+        .info-card {
+            background: white;
+            border-radius: 15px;
+            padding: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+        }
+        
+        .info-card-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .info-card-content {
+            color: #666;
+            line-height: 1.6;
+        }
+        
+        .stat-value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #667eea;
+            margin: 10px 0;
+        }
+        
+        /* LP Model Page */
+        .lp-model-page {
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            overflow: hidden;
+        }
+        
+        .lp-header {
+            background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .lp-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+        
+        .section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        
+        .section-title {
+            font-size: 1.4em;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        
+        .input-group {
+            margin-bottom: 20px;
+        }
+        
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: 500;
+        }
+        
+        select, input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1em;
+            transition: border-color 0.3s;
+        }
+        
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+        
+        .btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 14px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 1.1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            width: 100%;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .results-section {
+            grid-column: 1 / -1;
+            background: white;
+            border: 2px solid #e0e0e0;
+        }
+        
+        .yields-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        
+        .yields-table th, .yields-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .yields-table th {
+            background: #f0f0f0;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+        
+        @media (max-width: 768px) {
+            .charts-grid,
+            .lp-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .results-section {
+                grid-column: 1;
+            }
+            
+            .market-prices {
+                grid-template-columns: 1fr 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Header -->
+    <nav class="nav-header">
+        <div class="nav-content">
+            <div class="logo">
+                <div class="logo-icon">🛢️</div>
+                <span>Refinery Analytics Dashboard</span>
+            </div>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showDashboard()">Dashboard</button>
+                <button class="nav-btn" onclick="showLPModel()">LP Model</button>
+                <button class="nav-btn" onclick="showBlendingCalc()">Blending Calculator</button>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Dashboard Page -->
+    <div id="dashboardPage" class="dashboard-container" style="display: block;">
+        <!-- Market Status Bar -->
+        <div class="market-status">
+            <div class="market-status-header">
+                <h2 class="status-title">Live Market Conditions</h2>
+                <div class="live-indicator">
+                    <div class="live-dot"></div>
+                    <span>Live Data</span>
+                    <span style="margin-left: 10px; font-size: 0.85em; color: #666;" id="lastUpdateTime"></span>
+                </div>
+            </div>
+            <div class="market-prices">
+                <div class="price-card">
+                    <div class="price-label">Brent Crude</div>
+                    <div class="price-value" id="brentPrice">$76.22</div>
+                    <div class="price-change price-up">▲ +1.2%</div>
+                </div>
+                <div class="price-card">
+                    <div class="price-label">WTI Crude</div>
+                    <div class="price-value" id="wtiPrice">$73.56</div>
+                    <div class="price-change price-up">▲ +0.8%</div>
+                </div>
+                <div class="price-card">
+                    <div class="price-label">Gasoline</div>
+                    <div class="price-value">$95.00</div>
+                    <div class="price-change price-down">▼ -0.5%</div>
+                </div>
+                <div class="price-card">
+                    <div class="price-label">Diesel</div>
+                    <div class="price-value">$94.00</div>
+                    <div class="price-change price-up">▲ +1.5%</div>
+                </div>
+                <div class="price-card">
+                    <div class="price-label">Jet Fuel</div>
+                    <div class="price-value">$92.00</div>
+                    <div class="price-change price-up">▲ +0.4%</div>
+                </div>
+                <div class="price-card">
+                    <div class="price-label">3-2-1 Crack</div>
+                    <div class="price-value">$18.50</div>
+                    <div class="price-change price-up">▲ +2.1%</div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Hot Crudes Section -->
+        <div class="hot-crudes-container">
+            <div class="hot-crudes-header">
+                <h2 class="hot-crudes-title">
+                    <span class="fire-icon">🔥</span>
+                    Hot Crudes - Top 10 Most Profitable
+                </h2>
+                <div style="display: flex; gap: 15px; align-items: center;">
+                    <button class="nav-btn" onclick="showBlendingCalc()" style="padding: 8px 16px; font-size: 0.9em;">
+                        ⚗️ Open Blending Calculator
+                    </button>
+                    <div class="update-timer">
+                        <span class="timer-text">Next update in:</span>
+                        <span class="countdown" id="countdown">10:00</span>
+                    </div>
+                </div>
+            </div>
+            <div class="rankings-grid" id="rankingsGrid">
+                <!-- Rankings will be populated by JavaScript -->
+            </div>
+        </div>
+        
+        <!-- Charts Section -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h3 class="chart-title">Profitability by Crude Type</h3>
+                <div class="chart-wrapper">
+                    <canvas id="typeChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h3 class="chart-title">Regional Performance</h3>
+                <div class="chart-wrapper">
+                    <canvas id="regionChart"></canvas>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Info Cards -->
+        <div class="info-grid">
+            <div class="info-card">
+                <h3 class="info-card-title">
+                    <span>📊</span>
+                    Market Analysis
+                </h3>
+                <div class="info-card-content">
+                    <div class="stat-value" id="avgCrackSpread">$18.50</div>
+                    <p>Average crack spread across all grades</p>
+                    <br>
+                    <p>Current market conditions favor light sweet crudes with high gasoline and diesel yields. The 3-2-1 crack spread remains healthy, indicating strong refining margins.</p>
+                </div>
+            </div>
+            <div class="info-card">
+                <h3 class="info-card-title">
+                    <span>🏆</span>
+                    Best Performer
+                </h3>
+                <div class="info-card-content">
+                    <div class="stat-value" id="topCrudeName">Tapis</div>
+                    <p id="topCrudeDetails">Light Sweet • Asia Pacific • API 45.5°</p>
+                    <br>
+                    <p>Delivering exceptional margins due to high yields of premium products and favorable pricing differentials.</p>
+                </div>
+            </div>
+            <div class="info-card">
+                <h3 class="info-card-title">
+                    <span>📈</span>
+                    Market Trends
+                </h3>
+                <div class="info-card-content">
+                    <p><strong>Rising:</strong> Light sweet crude demand, jet fuel consumption</p>
+                    <p><strong>Stable:</strong> Diesel margins, gasoline demand</p>
+                    <p><strong>Declining:</strong> Fuel oil prices, heavy crude differentials</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- LP Model Page -->
+    <div id="lpModelPage" class="dashboard-container" style="display: none;">
+        <div class="lp-model-page">
+            <div class="lp-header">
+                <h1>🛢️ Refinery LP Model</h1>
+                <p>Crude Oil Assay Analysis & Profitability Calculator</p>
+            </div>
+            
+            <div class="lp-content">
+                <!-- Crude Selection Section -->
+                <div class="section">
+                    <h2 class="section-title">Crude Oil Selection</h2>
+                    
+                    <div class="input-group">
+                        <label for="crudeSelect">Select Crude Oil Grade:</label>
+                        <select id="crudeSelect">
+                            <option value="">-- Select a Crude Oil --</option>
+                        </select>
+                    </div>
+                    
+                    <div id="crudeInfo" class="info-panel" style="display: none; background: #e8f4fd; border-left: 4px solid #2196F3; padding: 15px; margin-bottom: 20px; border-radius: 5px;">
+                        <h4>Crude Specifications</h4>
+                        <div class="specifications">
+                            <div class="spec-item">
+                                <span class="spec-label">API Gravity:</span>
+                                <span class="spec-value" id="apiGravity">-</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Sulfur Content:</span>
+                                <span class="spec-value" id="sulfurContent">-</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Region:</span>
+                                <span class="spec-value" id="crudeRegion">-</span>
+                            </div>
+                            <div class="spec-item">
+                                <span class="spec-label">Type:</span>
+                                <span class="spec-value" id="crudeType">-</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Pricing & Volume Section -->
+                <div class="section">
+                    <h2 class="section-title">Pricing & Volume</h2>
+                    
+                    <div class="input-group">
+                        <label for="pricingMethod">Pricing Method:</label>
+                        <select id="pricingMethod">
+                            <option value="flat">Flat Price ($/bbl)</option>
+                            <option value="differential">Differential to Benchmark</option>
+                        </select>
+                    </div>
+                    
+                    <div id="flatPriceInput" class="input-group">
+                        <label for="crudePrice">Crude Purchase Price ($/bbl):</label>
+                        <input type="number" id="crudePrice" value="75" step="0.01">
+                    </div>
+                    
+                    <div id="differentialPriceInput" class="input-group" style="display: none;">
+                        <label for="benchmark">Benchmark:</label>
+                        <select id="benchmark">
+                            <option value="brent">Brent</option>
+                            <option value="wti">WTI</option>
+                            <option value="dubai">Dubai/Oman</option>
+                        </select>
+                        
+                        <label for="differential" style="margin-top: 15px;">Differential ($/bbl):</label>
+                        <input type="number" id="differential" value="0" step="0.01">
+                        
+                        <div style="margin-top: 10px; padding: 10px; background: #f0f0f0; border-radius: 5px;">
+                            <small>Current Benchmark Price: <span id="benchmarkPrice">$76.22</span>/bbl</small><br>
+                            <small>Effective Price: <span id="effectivePrice">$76.22</span>/bbl</small>
+                        </div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="volume">Processing Volume (bbl/day):</label>
+                        <input type="number" id="volume" value="100000" step="1000">
+                    </div>
+                    
+                    <button class="btn" onclick="calculateProfitability()">
+                        Calculate Profitability
+                    </button>
+                </div>
+                
+                <!-- Results Section -->
+                <div id="resultsSection" class="section results-section" style="display: none;">
+                    <h2 class="section-title">Analysis Results</h2>
+                    
+                    <div class="profit-display" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%); color: white; padding: 30px; border-radius: 12px; text-align: center; margin-bottom: 30px;">
+                        <h3 style="font-size: 1.2em; margin-bottom: 15px; opacity: 0.9;">Estimated Daily Profit Potential</h3>
+                        <div class="profit-amount" id="profitAmount" style="font-size: 3em; font-weight: bold;">$0</div>
+                    </div>
+                    
+                    <div class="chart-wrapper" style="height: 400px; margin-bottom: 30px;">
+                        <canvas id="yieldsChart"></canvas>
+                    </div>
+                    
+                    <h3 style="margin: 30px 0 20px;">Product Yields & Economics</h3>
+                    <table class="yields-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Yield (%)</th>
+                                <th>Volume (bbl/day)</th>
+                                <th>Market Price ($/bbl)</th>
+                                <th>Revenue ($/day)</th>
+                            </tr>
+                        </thead>
+                        <tbody id="yieldsTableBody">
+                            <!-- Populated dynamically -->
+                        </tbody>
+                    </table>
+                    
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-top: 30px;">
+                        <div class="detail-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                            <h4 style="color: #667eea; margin-bottom: 10px;">Gross Revenue</h4>
+                            <div class="detail-value" id="grossRevenue" style="font-size: 1.5em; font-weight: bold; color: #2c3e50;">$0</div>
+                            <div style="color: #777; font-size: 0.9em; margin-top: 5px;">Per Day</div>
+                        </div>
+                        <div class="detail-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                            <h4 style="color: #667eea; margin-bottom: 10px;">Crude Cost</h4>
+                            <div class="detail-value" id="crudeCost" style="font-size: 1.5em; font-weight: bold; color: #2c3e50;">$0</div>
+                            <div style="color: #777; font-size: 0.9em; margin-top: 5px;">Per Day</div>
+                        </div>
+                        <div class="detail-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                            <h4 style="color: #667eea; margin-bottom: 10px;">Gross Margin</h4>
+                            <div class="detail-value" id="grossMargin" style="font-size: 1.5em; font-weight: bold; color: #2c3e50;">0%</div>
+                            <div style="color: #777; font-size: 0.9em; margin-top: 5px;">Before Operating Costs</div>
+                        </div>
+                        <div class="detail-card" style="background: white; padding: 20px; border-radius: 10px; box-shadow: 0 3px 10px rgba(0,0,0,0.1);">
+                            <h4 style="color: #667eea; margin-bottom: 10px;">Crack Spread</h4>
+                            <div class="detail-value" id="crackSpread" style="font-size: 1.5em; font-weight: bold; color: #2c3e50;">$0</div>
+                            <div style="color: #777; font-size: 0.9em; margin-top: 5px;">Per Barrel</div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">📊 Market Comparison</h3>
+                        <div id="marketComparison" style="color: #666; line-height: 1.8;">
+                            Calculate profitability to see how this crude compares to current market leaders.
+                        </div>
+                        <button class="nav-btn" onclick="showDashboard()" style="margin-top: 15px; padding: 10px 20px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; cursor: pointer;">
+                            ← Back to Hot Crudes Dashboard
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Blending Calculator Page -->
+    <div id="blendingCalcPage" class="dashboard-container" style="display: none;">
+        <div class="lp-model-page">
+            <div class="lp-header" style="background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);">
+                <h1>⚗️ Crude Oil Blending Calculator</h1>
+                <p>Optimize crude blends for compatibility, specifications, and profitability</p>
+            </div>
+            
+            <!-- Embedded Assay Entry Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>📄 Quick Assay Entry (For Bakken or Other PDFs)</h2>
+                </div>
+                <div style="background: #e8f4fd; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                    <p style="color: #1565C0; margin-bottom: 15px;"><strong>Enter values from your crude oil assay:</strong></p>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div class="input-group">
+                            <label>Crude Name <span style="color: red;">*</span></label>
+                            <input type="text" id="assayName" placeholder="e.g., Bakken">
+                        </div>
+                        <div class="input-group">
+                            <label>API Gravity <span style="color: red;">*</span></label>
+                            <input type="number" id="assayAPI" step="0.1" placeholder="e.g., 43.8">
+                        </div>
+                        <div class="input-group">
+                            <label>Sulfur (% wt) <span style="color: red;">*</span></label>
+                            <input type="number" id="assaySulfur" step="0.001" placeholder="e.g., 0.09">
+                        </div>
+                        <div class="input-group">
+                            <label>Viscosity @50°C (cSt)</label>
+                            <input type="number" id="assayVisc" step="0.1" placeholder="e.g., 2.7">
+                        </div>
+                        <div class="input-group">
+                            <label>Pour Point (°C)</label>
+                            <input type="number" id="assayPour" step="1" placeholder="e.g., -51">
+                        </div>
+                        <div class="input-group">
+                            <label>MCR (% wt)</label>
+                            <input type="number" id="assayMCR" step="0.01" placeholder="e.g., 0.9">
+                        </div>
+                    </div>
+                    <div style="margin-top: 20px; display: flex; gap: 15px;">
+                        <button class="calculate-btn" onclick="loadBakkenExample()">Load Bakken Example</button>
+                        <button class="calculate-btn" onclick="addAssayToCrudes()">Add to Crude Library</button>
+                        <button class="btn" onclick="generateCSV()" style="background: #28a745;">Generate CSV</button>
+                    </div>
+                </div>
+                <div id="assayStatus" style="margin-top: 15px;"></div>
+            </div>
+            
+            <!-- Quick Blend Section -->
+            <div class="section" id="quickBlendSection">
+                <div class="section-header">
+                    <h2>⚡ Quick Blend Compatibility Check</h2>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
+                    <div>
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">Crude 1</h3>
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label>Select Crude:</label>
+                            <select id="quickCrude1" onchange="updateQuickProperties(1)" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <option value="">Choose crude...</option>
+                                <optgroup label="Light Sweet">
+                                    <option value="WTI">WTI</option>
+                                    <option value="Brent">Brent</option>
+                                    <option value="Bakken">Bakken</option>
+                                    <option value="Eagle Ford">Eagle Ford</option>
+                                    <option value="Tapis">Tapis</option>
+                                    <option value="Bonny Light">Bonny Light</option>
+                                    <option value="ESPO">ESPO Blend</option>
+                                </optgroup>
+                                <optgroup label="Medium Sweet">
+                                    <option value="Forcados">Forcados</option>
+                                    <option value="Qua Iboe">Qua Iboe</option>
+                                    <option value="Azeri Light">Azeri Light</option>
+                                </optgroup>
+                                <optgroup label="Medium Sour">
+                                    <option value="Arab Light">Arab Light</option>
+                                    <option value="Dubai">Dubai</option>
+                                    <option value="Urals">Urals</option>
+                                    <option value="Basrah Light">Basrah Light</option>
+                                    <option value="Kuwait">Kuwait</option>
+                                    <option value="Murban">Murban</option>
+                                </optgroup>
+                                <optgroup label="Heavy Sour">
+                                    <option value="Arab Heavy">Arab Heavy</option>
+                                    <option value="Maya">Maya</option>
+                                    <option value="WCS">Western Canadian Select</option>
+                                    <option value="Basrah Heavy">Basrah Heavy</option>
+                                    <option value="Venezuela">Venezuela Merey</option>
+                                </optgroup>
+                                <option value="Custom">Custom Entry</option>
+                            </select>
+                        </div>
+                        <div id="crude1Props" style="display: none; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                                <div><strong>API:</strong> <span id="crude1API">-</span>°</div>
+                                <div><strong>Sulfur:</strong> <span id="crude1Sulfur">-</span>%</div>
+                                <div><strong>Viscosity:</strong> <span id="crude1Visc">-</span> cSt</div>
+                                <div><strong>Price:</strong> $<span id="crude1Price">-</span>/bbl</div>
+                            </div>
+                        </div>
+                        <div id="crude1Custom" style="display: none; padding: 15px; background: #fff3cd; border-radius: 8px; margin-top: 10px;">
+                            <h4 style="margin-bottom: 10px;">Enter Custom Values:</h4>
+                            <input type="number" id="custom1API" placeholder="API" step="0.1" style="width: 100%; margin-bottom: 10px;">
+                            <input type="number" id="custom1Sulfur" placeholder="Sulfur %" step="0.01" style="width: 100%; margin-bottom: 10px;">
+                            <input type="number" id="custom1Visc" placeholder="Viscosity cSt" step="0.1" style="width: 100%;">
+                        </div>
+                    </div>
+                    <div>
+                        <h3 style="color: #2c3e50; margin-bottom: 15px;">Crude 2</h3>
+                        <div class="input-group" style="margin-bottom: 15px;">
+                            <label>Select Crude:</label>
+                            <select id="quickCrude2" onchange="updateQuickProperties(2)" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px;">
+                                <option value="">Choose crude...</option>
+                                <optgroup label="Light Sweet">
+                                    <option value="WTI">WTI</option>
+                                    <option value="Brent">Brent</option>
+                                    <option value="Bakken">Bakken</option>
+                                    <option value="Eagle Ford">Eagle Ford</option>
+                                    <option value="Tapis">Tapis</option>
+                                    <option value="Bonny Light">Bonny Light</option>
+                                    <option value="ESPO">ESPO Blend</option>
+                                </optgroup>
+                                <optgroup label="Medium Sweet">
+                                    <option value="Forcados">Forcados</option>
+                                    <option value="Qua Iboe">Qua Iboe</option>
+                                    <option value="Azeri Light">Azeri Light</option>
+                                </optgroup>
+                                <optgroup label="Medium Sour">
+                                    <option value="Arab Light">Arab Light</option>
+                                    <option value="Dubai">Dubai</option>
+                                    <option value="Urals">Urals</option>
+                                    <option value="Basrah Light">Basrah Light</option>
+                                    <option value="Kuwait">Kuwait</option>
+                                    <option value="Murban">Murban</option>
+                                </optgroup>
+                                <optgroup label="Heavy Sour">
+                                    <option value="Arab Heavy">Arab Heavy</option>
+                                    <option value="Maya">Maya</option>
+                                    <option value="WCS">Western Canadian Select</option>
+                                    <option value="Basrah Heavy">Basrah Heavy</option>
+                                    <option value="Venezuela">Venezuela Merey</option>
+                                </optgroup>
+                                <option value="Custom">Custom Entry</option>
+                            </select>
+                        </div>
+                        <div id="crude2Props" style="display: none; padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; font-size: 0.9em;">
+                                <div><strong>API:</strong> <span id="crude2API">-</span>°</div>
+                                <div><strong>Sulfur:</strong> <span id="crude2Sulfur">-</span>%</div>
+                                <div><strong>Viscosity:</strong> <span id="crude2Visc">-</span> cSt</div>
+                                <div><strong>Price:</strong> $<span id="crude2Price">-</span>/bbl</div>
+                            </div>
+                        </div>
+                        <div id="crude2Custom" style="display: none; padding: 15px; background: #fff3cd; border-radius: 8px; margin-top: 10px;">
+                            <h4 style="margin-bottom: 10px;">Enter Custom Values:</h4>
+                            <input type="number" id="custom2API" placeholder="API" step="0.1" style="width: 100%; margin-bottom: 10px;">
+                            <input type="number" id="custom2Sulfur" placeholder="Sulfur %" step="0.01" style="width: 100%; margin-bottom: 10px;">
+                            <input type="number" id="custom2Visc" placeholder="Viscosity cSt" step="0.1" style="width: 100%;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="margin-top: 30px;">
+                    <label style="font-weight: 600;">Blend Ratio:</label>
+                    <input type="range" id="blendRatio" min="0" max="100" value="50" oninput="updateBlendRatio()" style="width: 100%; margin: 10px 0;">
+                    <div style="display: flex; justify-content: space-between; color: #666;">
+                        <span>Crude 1: <strong id="ratio1">50</strong>%</span>
+                        <span>Crude 2: <strong id="ratio2">50</strong>%</span>
+                    </div>
+                </div>
+                
+                <button class="calculate-btn" onclick="calculateQuickBlend()" style="margin-top: 20px; width: 100%; padding: 15px;">
+                    Calculate Blend Properties
+                </button>
+                
+                <div id="quickBlendResults" style="display: none; margin-top: 30px; padding: 25px; background: white; border-radius: 12px; box-shadow: 0 5px 20px rgba(0,0,0,0.1);">
+                    <!-- Results populated by JavaScript -->
+                </div>
+            </div>
+            
+            <!-- Blend Optimization Section -->
+            <div class="section">
+                <div class="section-header">
+                    <h2>🎯 Blend Optimization</h2>
+                </div>
+                <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
+                    <h4 style="margin-bottom: 15px;">Set Target Specifications:</h4>
+                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;">
+                        <div class="input-group">
+                            <label>Target API Range:</label>
+                            <div style="display: flex; gap: 10px;">
+                                <input type="number" id="targetAPIMin" placeholder="Min" step="0.1" style="width: 50%;">
+                                <input type="number" id="targetAPIMax" placeholder="Max" step="0.1" style="width: 50%;">
+                            </div>
+                        </div>
+                        <div class="input-group">
+                            <label>Max Sulfur (%):</label>
+                            <input type="number" id="targetSulfurMax" placeholder="e.g., 1.5" step="0.01">
+                        </div>
+                        <div class="input-group">
+                            <label>Max Viscosity (cSt):</label>
+                            <input type="number" id="targetViscMax" placeholder="e.g., 50" step="1">
+                        </div>
+                    </div>
+                    <button class="calculate-btn" onclick="findOptimalBlends()" style="margin-top: 20px;">
+                        Find Optimal Blends
+                    </button>
+                </div>
+                <div id="optimizationResults" style="margin-top: 20px;"></div>
+            </div>
+            
+            <!-- Assumptions and Parameters Section -->
+            <div class="section" style="margin-top: 30px; background: #f8f9fa; border-radius: 10px; padding: 20px;">
+                <div class="section-header" style="cursor: pointer;" onclick="toggleAssumptions()">
+                    <h2>📊 Blending Assumptions & Parameters <span id="assumptionsToggle" style="float: right; font-size: 0.8em;">▼</span></h2>
+                </div>
+                <div id="assumptionsContent" style="display: none; margin-top: 20px;">
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #2196F3;">
+                            <h4 style="color: #1565C0; margin-bottom: 10px;">🔬 Compatibility Assessment Criteria</h4>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 0.9em;">
+                                <li><strong>Excellent (CN < 2):</strong> API diff < 8°, Viscosity ratio < 10:1</li>
+                                <li><strong>Good (CN 2-3.5):</strong> API diff 8-12°, Viscosity ratio 10-30:1</li>
+                                <li><strong>Marginal (CN 3.5-5):</strong> API diff 12-15°, Viscosity ratio 30-50:1</li>
+                                <li><strong>Incompatible (CN > 5):</strong> API diff > 15°, Viscosity ratio > 50:1</li>
+                                <li><strong>CN Formula:</strong> (ΔAPI/10) + log₁₀(Viscosity Ratio)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #4CAF50;">
+                            <h4 style="color: #2E7D32; margin-bottom: 10px;">⚗️ Blending Equations</h4>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 0.9em;">
+                                <li><strong>API Gravity:</strong> Non-linear (volume-weighted specific gravity)</li>
+                                <li><strong>Sulfur:</strong> Linear (mass-weighted average)</li>
+                                <li><strong>Viscosity:</strong> Log-linear blending (Refutas equation)</li>
+                                <li><strong>Pour Point:</strong> Non-linear (typically 3°C above highest component)</li>
+                                <li><strong>Metals:</strong> Linear (mass-weighted average)</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #FF9800;">
+                            <h4 style="color: #E65100; margin-bottom: 10px;">⚠️ Critical Parameters</h4>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 0.9em;">
+                                <li><strong>Asphaltene Stability:</strong> P-value > 1.0 for stable blend</li>
+                                <li><strong>Wax Precipitation:</strong> Monitor if pour point diff > 20°C</li>
+                                <li><strong>H₂S Evolution:</strong> Risk if mixing sweet/sour > 2% sulfur diff</li>
+                                <li><strong>Tank Stratification:</strong> Likely if density diff > 50 kg/m³</li>
+                                <li><strong>Sediment Formation:</strong> Test if mixing paraffinic/asphaltic</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #9C27B0;">
+                            <h4 style="color: #6A1B9A; margin-bottom: 10px;">🌡️ Temperature Guidelines</h4>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 0.9em;">
+                                <li><strong>Light-Light Blends:</strong> Ambient temperature acceptable</li>
+                                <li><strong>Light-Heavy Blends:</strong> Heat heavy component to 40-50°C</li>
+                                <li><strong>Heavy-Heavy Blends:</strong> Maintain 50-70°C throughout</li>
+                                <li><strong>High Wax Crudes:</strong> Keep 10°C above pour point</li>
+                                <li><strong>High Asphaltene:</strong> Maintain > 60°C to prevent precipitation</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #F44336;">
+                            <h4 style="color: #C62828; margin-bottom: 10px;">🔄 Mixing Requirements</h4>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 0.9em;">
+                                <li><strong>Compatible Blends:</strong> Side-entry mixers at 1-2 turnovers/day</li>
+                                <li><strong>Marginal Blends:</strong> Jet mixers at 3-5 turnovers/day</li>
+                                <li><strong>Difficult Blends:</strong> High-shear inline blending recommended</li>
+                                <li><strong>Circulation Rate:</strong> Min 0.5 m/s to prevent settling</li>
+                                <li><strong>Mixing Time:</strong> 4-8 hours for homogenization</li>
+                            </ul>
+                        </div>
+                        
+                        <div style="padding: 15px; background: white; border-radius: 8px; border-left: 4px solid #00BCD4;">
+                            <h4 style="color: #00838F; margin-bottom: 10px;">💊 Additive Recommendations</h4>
+                            <ul style="margin: 0; padding-left: 20px; line-height: 1.8; font-size: 0.9em;">
+                                <li><strong>Asphaltene Dispersants:</strong> 500-2000 ppm for stability</li>
+                                <li><strong>Pour Point Depressants:</strong> 200-1000 ppm for wax control</li>
+                                <li><strong>Demulsifiers:</strong> 10-50 ppm to prevent emulsions</li>
+                                <li><strong>H₂S Scavengers:</strong> As needed for sour blends</li>
+                                <li><strong>Compatibility Improvers:</strong> 0.5-2% aromatic solvents</li>
+                            </ul>
+                        </div>
+                        
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #e3f2fd; border-radius: 8px;">
+                        <h4 style="color: #1565C0; margin-bottom: 10px;">📚 Industry Standards & References</h4>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; font-size: 0.9em;">
+                            <div>
+                                <strong>ASTM Methods:</strong>
+                                <ul style="margin: 5px 0; padding-left: 20px;">
+                                    <li>D4740 - Cleanliness & Compatibility</li>
+                                    <li>D7157 - Asphaltene Stability (S-value)</li>
+                                    <li>D5853 - Pour Point of Blends</li>
+                                    <li>D7112 - Viscosity-Temperature (VISC)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Key Parameters:</strong>
+                                <ul style="margin: 5px 0; padding-left: 20px;">
+                                    <li>Solubility Blending Number (SBN)</li>
+                                    <li>Insolubility Number (IN)</li>
+                                    <li>Colloidal Instability Index (CII)</li>
+                                    <li>Toluene Equivalence (TE)</li>
+                                </ul>
+                            </div>
+                            <div>
+                                <strong>Safety Factors:</strong>
+                                <ul style="margin: 5px 0; padding-left: 20px;">
+                                    <li>Reid Vapor Pressure limits</li>
+                                    <li>Flash point requirements</li>
+                                    <li>H₂S exposure thresholds</li>
+                                    <li>Static accumulator assessment</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 15px; background: #fff8e1; border-radius: 8px;">
+                        <h4 style="color: #F57C00; margin-bottom: 10px;">⚡ Quick Decision Matrix</h4>
+                        <table style="width: 100%; border-collapse: collapse; font-size: 0.9em;">
+                            <thead>
+                                <tr style="background: #FFE0B2;">
+                                    <th style="padding: 10px; border: 1px solid #ddd; text-align: left;">Scenario</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Recommended Action</th>
+                                    <th style="padding: 10px; border: 1px solid #ddd;">Risk Level</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Light + Light (ΔAPI < 5)</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Direct blending OK</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; color: green;">Low</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Light + Medium (ΔAPI 5-15)</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Inline blending preferred</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; color: orange;">Medium</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Light + Heavy (ΔAPI > 15)</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Test compatibility first</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; color: red;">High</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Paraffinic + Asphaltic</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Add dispersant, heat blend</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; color: red;">High</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Sweet + Sour</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd;">Monitor H₂S, use scavenger</td>
+                                    <td style="padding: 10px; border: 1px solid #ddd; color: orange;">Medium</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 20px; padding: 10px; background: #ffebee; border-radius: 5px; text-align: center;">
+                        <small style="color: #c62828;">
+                            <strong>Disclaimer:</strong> These parameters are based on industry best practices. Always conduct laboratory compatibility tests before commercial blending operations. Results may vary based on specific crude characteristics, refinery configuration, and local regulations.
+                        </small>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Navigation -->
+            <div style="text-align: center; margin-top: 30px; padding-bottom: 30px;">
+                <button class="nav-btn" onclick="showDashboard()" style="margin: 0 10px;">
+                    ← Back to Dashboard
+                </button>
+                <button class="nav-btn" onclick="showLPModel()" style="margin: 0 10px;">
+                    Go to LP Model →
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Comprehensive crude oil database
+        const crudeOilDatabase = {
+            // Light Sweet Crudes
+            "WTI (West Texas Intermediate)": {
+                api: 39.6,
+                sulfur: 0.24,
+                viscosity: 7.0,
+                region: "North America",
+                type: "Light Sweet",
+                typicalDifferential: 0,
+                yields: {
+                    "LPG": 3.0,
+                    "Light Naphtha": 5.5,
+                    "Heavy Naphtha": 8.0,
+                    "Gasoline": 26.0,
+                    "Jet Fuel/Kerosene": 12.0,
+                    "Diesel/Gasoil": 23.0,
+                    "Fuel Oil": 18.5,
+                    "Residue": 4.0
+                }
+            },
+            "Brent Blend": {
+                api: 38.1,
+                sulfur: 0.37,
+                viscosity: 8.5,
+                region: "North Sea",
+                type: "Light Sweet",
+                typicalDifferential: 2.5,
+                yields: {
+                    "LPG": 2.8,
+                    "Light Naphtha": 5.0,
+                    "Heavy Naphtha": 7.5,
+                    "Gasoline": 25.0,
+                    "Jet Fuel/Kerosene": 11.5,
+                    "Diesel/Gasoil": 24.0,
+                    "Fuel Oil": 19.7,
+                    "Residue": 4.5
+                }
+            },
+            "Bonny Light": {
+                api: 35.0,
+                sulfur: 0.14,
+                region: "West Africa",
+                type: "Light Sweet",
+                typicalDifferential: 1.5,
+                yields: {
+                    "LPG": 2.5,
+                    "Light Naphtha": 6.0,
+                    "Heavy Naphtha": 9.0,
+                    "Gasoline": 23.0,
+                    "Jet Fuel/Kerosene": 13.0,
+                    "Diesel/Gasoil": 25.0,
+                    "Fuel Oil": 17.0,
+                    "Residue": 4.5
+                }
+            },
+            "Tapis": {
+                api: 45.5,
+                sulfur: 0.03,
+                region: "Asia Pacific",
+                type: "Light Sweet",
+                typicalDifferential: 5.0,
+                yields: {
+                    "LPG": 4.0,
+                    "Light Naphtha": 8.0,
+                    "Heavy Naphtha": 10.0,
+                    "Gasoline": 28.0,
+                    "Jet Fuel/Kerosene": 14.0,
+                    "Diesel/Gasoil": 22.0,
+                    "Fuel Oil": 11.0,
+                    "Residue": 3.0
+                }
+            },
+            "Eagle Ford": {
+                api: 47.0,
+                sulfur: 0.12,
+                region: "North America",
+                type: "Light Sweet",
+                typicalDifferential: -2.0,
+                yields: {
+                    "LPG": 5.0,
+                    "Light Naphtha": 9.0,
+                    "Heavy Naphtha": 11.0,
+                    "Gasoline": 29.0,
+                    "Jet Fuel/Kerosene": 13.0,
+                    "Diesel/Gasoil": 21.0,
+                    "Fuel Oil": 9.0,
+                    "Residue": 3.0
+                }
+            },
+            "Bakken": {
+                api: 42.0,
+                sulfur: 0.18,
+                region: "North America",
+                type: "Light Sweet",
+                typicalDifferential: -1.0,
+                yields: {
+                    "LPG": 4.2,
+                    "Light Naphtha": 7.5,
+                    "Heavy Naphtha": 9.5,
+                    "Gasoline": 27.0,
+                    "Jet Fuel/Kerosene": 13.5,
+                    "Diesel/Gasoil": 23.0,
+                    "Fuel Oil": 12.3,
+                    "Residue": 3.0
+                }
+            },
+            "Azeri Light": {
+                api: 35.0,
+                sulfur: 0.15,
+                region: "Caspian",
+                type: "Light Sweet",
+                typicalDifferential: 1.0,
+                yields: {
+                    "LPG": 2.5,
+                    "Light Naphtha": 5.5,
+                    "Heavy Naphtha": 8.0,
+                    "Gasoline": 24.0,
+                    "Jet Fuel/Kerosene": 12.0,
+                    "Diesel/Gasoil": 25.5,
+                    "Fuel Oil": 18.0,
+                    "Residue": 4.5
+                }
+            },
+            "Saharan Blend": {
+                api: 45.0,
+                sulfur: 0.05,
+                region: "North Africa",
+                type: "Light Sweet",
+                typicalDifferential: 2.0,
+                yields: {
+                    "LPG": 3.8,
+                    "Light Naphtha": 8.0,
+                    "Heavy Naphtha": 10.0,
+                    "Gasoline": 28.0,
+                    "Jet Fuel/Kerosene": 14.0,
+                    "Diesel/Gasoil": 22.2,
+                    "Fuel Oil": 11.0,
+                    "Residue": 3.0
+                }
+            },
+            
+            // Medium Sour Crudes
+            "Arab Light": {
+                api: 33.0,
+                sulfur: 2.0,
+                viscosity: 15.0,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: -3.0,
+                yields: {
+                    "LPG": 2.0,
+                    "Light Naphtha": 4.0,
+                    "Heavy Naphtha": 6.5,
+                    "Gasoline": 20.0,
+                    "Jet Fuel/Kerosene": 10.0,
+                    "Diesel/Gasoil": 24.0,
+                    "Fuel Oil": 27.0,
+                    "Residue": 6.5
+                }
+            },
+            "Kuwait Export": {
+                api: 31.0,
+                sulfur: 2.5,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: -5.0,
+                yields: {
+                    "LPG": 1.8,
+                    "Light Naphtha": 3.5,
+                    "Heavy Naphtha": 6.0,
+                    "Gasoline": 18.5,
+                    "Jet Fuel/Kerosene": 9.5,
+                    "Diesel/Gasoil": 23.0,
+                    "Fuel Oil": 30.2,
+                    "Residue": 7.5
+                }
+            },
+            "Basrah Light": {
+                api: 30.5,
+                sulfur: 2.9,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: -4.5,
+                yields: {
+                    "LPG": 1.7,
+                    "Light Naphtha": 3.3,
+                    "Heavy Naphtha": 5.5,
+                    "Gasoline": 18.0,
+                    "Jet Fuel/Kerosene": 9.0,
+                    "Diesel/Gasoil": 22.5,
+                    "Fuel Oil": 32.0,
+                    "Residue": 8.0
+                }
+            },
+            "Dubai": {
+                api: 31.0,
+                sulfur: 2.0,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: 0,
+                yields: {
+                    "LPG": 1.9,
+                    "Light Naphtha": 3.8,
+                    "Heavy Naphtha": 6.2,
+                    "Gasoline": 19.0,
+                    "Jet Fuel/Kerosene": 9.8,
+                    "Diesel/Gasoil": 23.5,
+                    "Fuel Oil": 29.0,
+                    "Residue": 6.8
+                }
+            },
+            "Oman": {
+                api: 34.0,
+                sulfur: 0.8,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: 0.5,
+                yields: {
+                    "LPG": 2.2,
+                    "Light Naphtha": 4.5,
+                    "Heavy Naphtha": 7.0,
+                    "Gasoline": 21.5,
+                    "Jet Fuel/Kerosene": 11.0,
+                    "Diesel/Gasoil": 24.8,
+                    "Fuel Oil": 24.0,
+                    "Residue": 5.0
+                }
+            },
+            "Urals": {
+                api: 31.5,
+                sulfur: 1.4,
+                region: "Russia",
+                type: "Medium Sour",
+                typicalDifferential: -6.0,
+                yields: {
+                    "LPG": 2.0,
+                    "Light Naphtha": 4.0,
+                    "Heavy Naphtha": 6.5,
+                    "Gasoline": 19.5,
+                    "Jet Fuel/Kerosene": 10.0,
+                    "Diesel/Gasoil": 24.0,
+                    "Fuel Oil": 28.0,
+                    "Residue": 6.0
+                }
+            },
+            "ESPO Blend": {
+                api: 35.0,
+                sulfur: 0.6,
+                region: "Russia",
+                type: "Medium Sweet",
+                typicalDifferential: 2.0,
+                yields: {
+                    "LPG": 2.5,
+                    "Light Naphtha": 5.0,
+                    "Heavy Naphtha": 7.5,
+                    "Gasoline": 23.0,
+                    "Jet Fuel/Kerosene": 12.0,
+                    "Diesel/Gasoil": 25.0,
+                    "Fuel Oil": 20.5,
+                    "Residue": 4.5
+                }
+            },
+            "Forcados": {
+                api: 30.0,
+                sulfur: 0.24,
+                region: "West Africa",
+                type: "Medium Sweet",
+                typicalDifferential: 0.5,
+                yields: {
+                    "LPG": 2.0,
+                    "Light Naphtha": 4.5,
+                    "Heavy Naphtha": 7.0,
+                    "Gasoline": 21.0,
+                    "Jet Fuel/Kerosene": 11.0,
+                    "Diesel/Gasoil": 25.0,
+                    "Fuel Oil": 24.0,
+                    "Residue": 5.5
+                }
+            },
+            "Qua Iboe": {
+                api: 36.0,
+                sulfur: 0.12,
+                region: "West Africa",
+                type: "Light Sweet",
+                typicalDifferential: 1.8,
+                yields: {
+                    "LPG": 2.8,
+                    "Light Naphtha": 6.2,
+                    "Heavy Naphtha": 8.5,
+                    "Gasoline": 24.5,
+                    "Jet Fuel/Kerosene": 12.5,
+                    "Diesel/Gasoil": 24.0,
+                    "Fuel Oil": 17.0,
+                    "Residue": 4.5
+                }
+            },
+            
+            // Heavy Sour Crudes
+            "Arab Heavy": {
+                api: 28.0,
+                sulfur: 2.8,
+                viscosity: 45.0,
+                region: "Middle East",
+                type: "Heavy Sour",
+                typicalDifferential: -8.0,
+                yields: {
+                    "LPG": 1.5,
+                    "Light Naphtha": 3.0,
+                    "Heavy Naphtha": 5.0,
+                    "Gasoline": 16.0,
+                    "Jet Fuel/Kerosene": 8.0,
+                    "Diesel/Gasoil": 21.0,
+                    "Fuel Oil": 36.5,
+                    "Residue": 9.0
+                }
+            },
+            "Maya": {
+                api: 22.0,
+                sulfur: 3.3,
+                viscosity: 150.0,
+                region: "Latin America",
+                type: "Heavy Sour",
+                typicalDifferential: -12.0,
+                yields: {
+                    "LPG": 1.0,
+                    "Light Naphtha": 2.0,
+                    "Heavy Naphtha": 3.5,
+                    "Gasoline": 12.0,
+                    "Jet Fuel/Kerosene": 6.0,
+                    "Diesel/Gasoil": 18.0,
+                    "Fuel Oil": 45.5,
+                    "Residue": 12.0
+                }
+            },
+            "Western Canadian Select": {
+                api: 20.5,
+                sulfur: 3.5,
+                viscosity: 250.0,
+                region: "North America",
+                type: "Heavy Sour",
+                typicalDifferential: -15.0,
+                yields: {
+                    "LPG": 0.8,
+                    "Light Naphtha": 1.8,
+                    "Heavy Naphtha": 3.2,
+                    "Gasoline": 11.0,
+                    "Jet Fuel/Kerosene": 5.5,
+                    "Diesel/Gasoil": 17.2,
+                    "Fuel Oil": 47.0,
+                    "Residue": 13.5
+                }
+            },
+            "Bakken": {
+                api: 43.8,
+                sulfur: 0.09,
+                viscosity: 2.7,
+                region: "North America",
+                type: "Light Sweet",
+                typicalDifferential: -1.5,
+                yields: {
+                    "LPG": 4.5,
+                    "Light Naphtha": 12.0,
+                    "Heavy Naphtha": 15.0,
+                    "Gasoline": 30.0,
+                    "Jet Fuel/Kerosene": 12.0,
+                    "Diesel/Gasoil": 20.0,
+                    "Fuel Oil": 5.0,
+                    "Residue": 1.5
+                }
+            },
+            "Eagle Ford": {
+                api: 47.0,
+                sulfur: 0.12,
+                viscosity: 3.0,
+                region: "North America",
+                type: "Light Sweet",
+                typicalDifferential: -3.0,
+                yields: {
+                    "LPG": 5.0,
+                    "Light Naphtha": 13.0,
+                    "Heavy Naphtha": 16.0,
+                    "Gasoline": 32.0,
+                    "Jet Fuel/Kerosene": 13.0,
+                    "Diesel/Gasoil": 18.0,
+                    "Fuel Oil": 2.5,
+                    "Residue": 0.5
+                }
+            },
+            "Tapis": {
+                api: 45.5,
+                sulfur: 0.03,
+                viscosity: 3.5,
+                region: "Asia Pacific",
+                type: "Light Sweet",
+                typicalDifferential: 5.0,
+                yields: {
+                    "LPG": 4.8,
+                    "Light Naphtha": 12.5,
+                    "Heavy Naphtha": 15.5,
+                    "Gasoline": 31.0,
+                    "Jet Fuel/Kerosene": 12.5,
+                    "Diesel/Gasoil": 19.0,
+                    "Fuel Oil": 3.7,
+                    "Residue": 1.0
+                }
+            },
+            "ESPO": {
+                api: 35.0,
+                sulfur: 0.6,
+                viscosity: 12.0,
+                region: "Russia",
+                type: "Light Sweet",
+                typicalDifferential: 2.0,
+                yields: {
+                    "LPG": 2.5,
+                    "Light Naphtha": 6.0,
+                    "Heavy Naphtha": 9.5,
+                    "Gasoline": 21.0,
+                    "Jet Fuel/Kerosene": 11.5,
+                    "Diesel/Gasoil": 24.5,
+                    "Fuel Oil": 18.5,
+                    "Residue": 6.5
+                }
+            },
+            "Dubai": {
+                api: 31.0,
+                sulfur: 2.0,
+                viscosity: 22.0,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: -1.0,
+                yields: {
+                    "LPG": 2.0,
+                    "Light Naphtha": 5.0,
+                    "Heavy Naphtha": 8.0,
+                    "Gasoline": 18.0,
+                    "Jet Fuel/Kerosene": 10.0,
+                    "Diesel/Gasoil": 23.0,
+                    "Fuel Oil": 25.0,
+                    "Residue": 9.0
+                }
+            },
+            "Kuwait": {
+                api: 30.5,
+                sulfur: 2.5,
+                viscosity: 28.0,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: -4.0,
+                yields: {
+                    "LPG": 1.9,
+                    "Light Naphtha": 4.9,
+                    "Heavy Naphtha": 7.9,
+                    "Gasoline": 17.8,
+                    "Jet Fuel/Kerosene": 10.0,
+                    "Diesel/Gasoil": 23.0,
+                    "Fuel Oil": 25.5,
+                    "Residue": 9.0
+                }
+            },
+            "Murban": {
+                api: 40.0,
+                sulfur: 0.8,
+                viscosity: 6.0,
+                region: "Middle East",
+                type: "Light Sweet",
+                typicalDifferential: 0.5,
+                yields: {
+                    "LPG": 3.6,
+                    "Light Naphtha": 8.5,
+                    "Heavy Naphtha": 12.8,
+                    "Gasoline": 26.5,
+                    "Jet Fuel/Kerosene": 11.5,
+                    "Diesel/Gasoil": 22.0,
+                    "Fuel Oil": 11.0,
+                    "Residue": 3.1
+                }
+            },
+            "Basrah Light": {
+                api: 30.5,
+                sulfur: 2.9,
+                viscosity: 25.0,
+                region: "Middle East",
+                type: "Medium Sour",
+                typicalDifferential: -5.0,
+                yields: {
+                    "LPG": 1.9,
+                    "Light Naphtha": 4.8,
+                    "Heavy Naphtha": 7.8,
+                    "Gasoline": 17.5,
+                    "Jet Fuel/Kerosene": 9.8,
+                    "Diesel/Gasoil": 22.8,
+                    "Fuel Oil": 26.4,
+                    "Residue": 9.0
+                }
+            },
+            "Basrah Heavy": {
+                api: 24.0,
+                sulfur: 3.9,
+                viscosity: 80.0,
+                region: "Middle East",
+                type: "Heavy Sour",
+                typicalDifferential: -10.0,
+                yields: {
+                    "LPG": 1.2,
+                    "Light Naphtha": 3.0,
+                    "Heavy Naphtha": 5.0,
+                    "Gasoline": 13.0,
+                    "Jet Fuel/Kerosene": 7.5,
+                    "Diesel/Gasoil": 19.5,
+                    "Fuel Oil": 36.8,
+                    "Residue": 14.0
+                }
+            },
+            "Venezuela Merey": {
+                api: 16.0,
+                sulfur: 2.5,
+                viscosity: 500.0,
+                region: "Latin America",
+                type: "Heavy Sour",
+                typicalDifferential: -18.0,
+                yields: {
+                    "LPG": 0.5,
+                    "Light Naphtha": 1.5,
+                    "Heavy Naphtha": 2.5,
+                    "Gasoline": 8.0,
+                    "Jet Fuel/Kerosene": 5.0,
+                    "Diesel/Gasoil": 15.5,
+                    "Fuel Oil": 48.0,
+                    "Residue": 19.0
+                }
+            },
+            "Cold Lake Blend": {
+                api: 20.5,
+                sulfur: 3.8,
+                region: "North America",
+                type: "Heavy Sour",
+                typicalDifferential: -16.0,
+                yields: {
+                    "LPG": 0.8,
+                    "Light Naphtha": 1.7,
+                    "Heavy Naphtha": 3.0,
+                    "Gasoline": 10.5,
+                    "Jet Fuel/Kerosene": 5.0,
+                    "Diesel/Gasoil": 16.5,
+                    "Fuel Oil": 48.0,
+                    "Residue": 14.5
+                }
+            },
+            "Venezuelan Merey": {
+                api: 16.0,
+                sulfur: 2.5,
+                region: "Latin America",
+                type: "Heavy Sour",
+                typicalDifferential: -18.0,
+                yields: {
+                    "LPG": 0.5,
+                    "Light Naphtha": 1.2,
+                    "Heavy Naphtha": 2.3,
+                    "Gasoline": 8.5,
+                    "Jet Fuel/Kerosene": 4.0,
+                    "Diesel/Gasoil": 14.5,
+                    "Fuel Oil": 53.0,
+                    "Residue": 16.0
+                }
+            },
+            "Basrah Heavy": {
+                api: 24.0,
+                sulfur: 3.9,
+                region: "Middle East",
+                type: "Heavy Sour",
+                typicalDifferential: -10.0,
+                yields: {
+                    "LPG": 1.2,
+                    "Light Naphtha": 2.5,
+                    "Heavy Naphtha": 4.0,
+                    "Gasoline": 14.0,
+                    "Jet Fuel/Kerosene": 7.0,
+                    "Diesel/Gasoil": 19.3,
+                    "Fuel Oil": 42.0,
+                    "Residue": 10.0
+                }
+            }
+        };
+        
+        // Product prices with volatility
+        let productPrices = {
+            "LPG": 55,
+            "Light Naphtha": 78,
+            "Heavy Naphtha": 80,
+            "Gasoline": 95,
+            "Jet Fuel/Kerosene": 92,
+            "Diesel/Gasoil": 94,
+            "Fuel Oil": 65,
+            "Residue": 45
+        };
+        
+        // Benchmark prices with volatility
+        let benchmarkPrices = {
+            "brent": 76.22,
+            "wti": 73.56,
+            "dubai": 76.18
+        };
+        
+        // Make currentPrices available globally for blending calculator
+        let currentPrices = benchmarkPrices;
+        
+        // Chart instances
+        let yieldsChart = null;
+        let typeChart = null;
+        let regionChart = null;
+        
+        // Timer variables
+        let countdownInterval;
+        let updateInterval;
+        let secondsRemaining = 600; // 10 minutes
+        
+        // Calculate profitability for a crude
+        function calculateCrudeProfitability(crudeName, crudeData, customVolume = 100000) {
+            const basePrice = benchmarkPrices.brent + (crudeData.typicalDifferential || 0);
+            const volume = customVolume;
+            
+            let totalRevenue = 0;
+            for (const [product, yieldPercent] of Object.entries(crudeData.yields)) {
+                const productVolume = (volume * yieldPercent) / 100;
+                const productPrice = productPrices[product];
+                totalRevenue += productVolume * productPrice;
+            }
+            
+            const totalCost = volume * basePrice;
+            const grossProfit = totalRevenue - totalCost;
+            const crackSpread = (totalRevenue - totalCost) / volume;
+            const margin = (grossProfit / totalRevenue) * 100;
+            
+            return {
+                name: crudeName,
+                data: crudeData,
+                price: basePrice,
+                revenue: totalRevenue,
+                cost: totalCost,
+                profit: grossProfit,
+                crackSpread: crackSpread,
+                margin: margin
+            };
+        }
+        
+        // Update hot crudes ranking
+        function updateHotCrudes() {
+            // Update last update time
+            const now = new Date();
+            document.getElementById('lastUpdateTime').textContent = 
+                `Last updated: ${now.toLocaleTimeString()}`;
+            
+            // Add small random variations to simulate market changes
+            Object.keys(productPrices).forEach(product => {
+                const variation = (Math.random() - 0.5) * 2; // +/- $1 variation
+                productPrices[product] = Math.max(30, productPrices[product] + variation);
+            });
+            
+            Object.keys(benchmarkPrices).forEach(benchmark => {
+                const variation = (Math.random() - 0.5) * 1; // +/- $0.50 variation
+                benchmarkPrices[benchmark] = Math.max(50, benchmarkPrices[benchmark] + variation);
+            });
+            
+            // Update market prices display
+            document.getElementById('brentPrice').textContent = `$${benchmarkPrices.brent.toFixed(2)}`;
+            document.getElementById('wtiPrice').textContent = `$${benchmarkPrices.wti.toFixed(2)}`;
+            
+            // Calculate profitability for all crudes
+            const crudeAnalysis = [];
+            for (const [crudeName, crudeData] of Object.entries(crudeOilDatabase)) {
+                crudeAnalysis.push(calculateCrudeProfitability(crudeName, crudeData));
+            }
+            
+            // Sort by profitability
+            crudeAnalysis.sort((a, b) => b.crackSpread - a.crackSpread);
+            
+            // Get top 10
+            const top10 = crudeAnalysis.slice(0, 10);
+            
+            // Update rankings display
+            const rankingsGrid = document.getElementById('rankingsGrid');
+            rankingsGrid.innerHTML = '';
+            
+            top10.forEach((crude, index) => {
+                const rankCard = document.createElement('div');
+                rankCard.className = 'rank-card';
+                rankCard.style.position = 'relative';
+                
+                const rankClass = index === 0 ? 'rank-1' : 
+                                 index === 1 ? 'rank-2' : 
+                                 index === 2 ? 'rank-3' : 'rank-default';
+                
+                rankCard.innerHTML = `
+                    <div class="rank-number ${rankClass}">${index + 1}</div>
+                    <div class="crude-info">
+                        <div class="crude-name">${crude.name}</div>
+                        <div class="crude-details">
+                            <span class="detail-badge">${crude.data.type}</span>
+                            <span class="detail-badge">${crude.data.region}</span>
+                            <span class="detail-badge">API ${crude.data.api}°</span>
+                            <span class="detail-badge">S ${crude.data.sulfur}%</span>
+                        </div>
+                    </div>
+                    <div class="profit-metric">
+                        <div class="metric-label">Crack Spread</div>
+                        <div class="metric-value">$${crude.crackSpread.toFixed(2)}</div>
+                    </div>
+                    <div class="profit-metric">
+                        <div class="metric-label">Margin</div>
+                        <div class="metric-value">${crude.margin.toFixed(1)}%</div>
+                    </div>
+                    <div class="profit-metric">
+                        <div class="metric-label">Daily Profit</div>
+                        <div class="profit-amount">$${(crude.profit / 1000).toFixed(0)}K</div>
+                    </div>
+                `;
+                
+                rankCard.onclick = () => selectCrudeInLP(crude.name);
+                
+                rankingsGrid.appendChild(rankCard);
+            });
+            
+            // Update top performer card
+            if (top10.length > 0) {
+                document.getElementById('topCrudeName').textContent = top10[0].name;
+                document.getElementById('topCrudeDetails').textContent = 
+                    `${top10[0].data.type} • ${top10[0].data.region} • API ${top10[0].data.api}°`;
+            }
+            
+            // Calculate average crack spread
+            const avgCrack = crudeAnalysis.reduce((sum, c) => sum + c.crackSpread, 0) / crudeAnalysis.length;
+            document.getElementById('avgCrackSpread').textContent = `$${avgCrack.toFixed(2)}`;
+            
+            // Update charts
+            updateCharts(crudeAnalysis);
+        }
+        
+        // Update charts
+        function updateCharts(crudeAnalysis) {
+            // Group by type
+            const typeGroups = {};
+            crudeAnalysis.forEach(crude => {
+                if (!typeGroups[crude.data.type]) {
+                    typeGroups[crude.data.type] = [];
+                }
+                typeGroups[crude.data.type].push(crude.crackSpread);
+            });
+            
+            const typeAverages = Object.entries(typeGroups).map(([type, spreads]) => ({
+                type: type,
+                average: spreads.reduce((a, b) => a + b, 0) / spreads.length
+            }));
+            
+            // Update type chart
+            const typeCtx = document.getElementById('typeChart').getContext('2d');
+            if (typeChart) typeChart.destroy();
+            
+            typeChart = new Chart(typeCtx, {
+                type: 'bar',
+                data: {
+                    labels: typeAverages.map(d => d.type),
+                    datasets: [{
+                        label: 'Average Crack Spread ($/bbl)',
+                        data: typeAverages.map(d => d.average),
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(255, 107, 107, 0.8)',
+                            'rgba(56, 239, 125, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                callback: value => `$${value.toFixed(0)}`
+                            }
+                        }
+                    }
+                }
+            });
+            
+            // Group by region
+            const regionGroups = {};
+            crudeAnalysis.forEach(crude => {
+                if (!regionGroups[crude.data.region]) {
+                    regionGroups[crude.data.region] = [];
+                }
+                regionGroups[crude.data.region].push(crude.crackSpread);
+            });
+            
+            const regionAverages = Object.entries(regionGroups).map(([region, spreads]) => ({
+                region: region,
+                average: spreads.reduce((a, b) => a + b, 0) / spreads.length
+            })).sort((a, b) => b.average - a.average).slice(0, 6);
+            
+            // Update region chart
+            const regionCtx = document.getElementById('regionChart').getContext('2d');
+            if (regionChart) regionChart.destroy();
+            
+            regionChart = new Chart(regionCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: regionAverages.map(d => d.region),
+                    datasets: [{
+                        data: regionAverages.map(d => d.average),
+                        backgroundColor: [
+                            'rgba(102, 126, 234, 0.8)',
+                            'rgba(118, 75, 162, 0.8)',
+                            'rgba(255, 107, 107, 0.8)',
+                            'rgba(56, 239, 125, 0.8)',
+                            'rgba(255, 193, 7, 0.8)',
+                            'rgba(32, 201, 151, 0.8)'
+                        ]
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': $' + context.parsed.toFixed(2);
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Countdown timer
+        function updateCountdown() {
+            const minutes = Math.floor(secondsRemaining / 60);
+            const seconds = secondsRemaining % 60;
+            document.getElementById('countdown').textContent = 
+                `${minutes}:${seconds.toString().padStart(2, '0')}`;
+            
+            secondsRemaining--;
+            
+            if (secondsRemaining < 0) {
+                secondsRemaining = 600; // Reset to 10 minutes
+                updateHotCrudes(); // Update data
+            }
+        }
+        
+        // Navigation functions
+        function showDashboard() {
+            const dashboardPage = document.getElementById('dashboardPage');
+            const lpModelPage = document.getElementById('lpModelPage');
+            const blendingCalcPage = document.getElementById('blendingCalcPage');
+            
+            if (dashboardPage) dashboardPage.style.display = 'block';
+            if (lpModelPage) lpModelPage.style.display = 'none';
+            if (blendingCalcPage) blendingCalcPage.style.display = 'none';
+            
+            window.scrollTo(0, 0);
+        }
+        
+        function showLPModel() {
+            const dashboardPage = document.getElementById('dashboardPage');
+            const lpModelPage = document.getElementById('lpModelPage');
+            const blendingCalcPage = document.getElementById('blendingCalcPage');
+            
+            if (dashboardPage) dashboardPage.style.display = 'none';
+            if (lpModelPage) lpModelPage.style.display = 'block';
+            if (blendingCalcPage) blendingCalcPage.style.display = 'none';
+            
+            window.scrollTo(0, 0);
+        }
+        
+        function showBlendingCalc() {
+            const dashboardPage = document.getElementById('dashboardPage');
+            const lpModelPage = document.getElementById('lpModelPage');
+            const blendingCalcPage = document.getElementById('blendingCalcPage');
+            
+            if (dashboardPage) dashboardPage.style.display = 'none';
+            if (lpModelPage) lpModelPage.style.display = 'none';
+            if (blendingCalcPage) blendingCalcPage.style.display = 'block';
+            
+            window.scrollTo(0, 0);
+        }
+        
+        // Quick analyze function - immediately shows results
+        function quickAnalyze(crudeName) {
+            showLPModel();
+            document.getElementById('crudeSelect').value = crudeName;
+            updateCrudeInfo();
+            
+            // Auto-set to differential pricing with typical differential
+            const crudeData = crudeOilDatabase[crudeName];
+            if (crudeData.typicalDifferential !== undefined) {
+                document.getElementById('pricingMethod').value = 'differential';
+                togglePricingMethod();
+                document.getElementById('benchmark').value = 'brent';
+                document.getElementById('differential').value = crudeData.typicalDifferential;
+                updateEffectivePrice();
+            }
+            
+            // Auto-calculate with default volume
+            document.getElementById('volume').value = '100000';
+            calculateProfitability();
+            
+            // Scroll to results
+            setTimeout(() => {
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        }
+        
+        // Select crude in LP model from hot crudes
+        function selectCrudeInLP(crudeName) {
+            showLPModel();
+            document.getElementById('crudeSelect').value = crudeName;
+            updateCrudeInfo();
+            
+            // Auto-set to differential pricing with typical differential
+            const crudeData = crudeOilDatabase[crudeName];
+            if (crudeData.typicalDifferential !== undefined) {
+                document.getElementById('pricingMethod').value = 'differential';
+                togglePricingMethod();
+                document.getElementById('benchmark').value = 'brent';
+                document.getElementById('differential').value = crudeData.typicalDifferential;
+                updateEffectivePrice();
+            }
+            
+            // Scroll to top of LP model
+            window.scrollTo(0, 0);
+        }
+        
+        // Blending Calculator Functions
+        function updateQuickProperties(crudeNum) {
+            const selectId = crudeNum === 1 ? 'quickCrude1' : 'quickCrude2';
+            const crudeName = document.getElementById(selectId).value;
+            const propsDiv = document.getElementById(`crude${crudeNum}Props`);
+            const customDiv = document.getElementById(`crude${crudeNum}Custom`);
+            
+            if (!crudeName) {
+                propsDiv.style.display = 'none';
+                customDiv.style.display = 'none';
+                return;
+            }
+            
+            if (crudeName === 'Custom') {
+                propsDiv.style.display = 'none';
+                customDiv.style.display = 'block';
+                return;
+            }
+            
+            customDiv.style.display = 'none';
+            
+            // Map crude names to database keys
+            const crudeMap = {
+                // Light Sweet
+                'WTI': 'WTI (West Texas Intermediate)',
+                'Brent': 'Brent Blend',
+                'Bakken': 'Bakken',
+                'Eagle Ford': 'Eagle Ford',
+                'Tapis': 'Tapis',
+                'Bonny Light': 'Bonny Light',
+                'ESPO': 'ESPO',
+                // Medium Sweet
+                'Forcados': 'Forcados',
+                'Qua Iboe': 'Qua Iboe',
+                'Azeri Light': 'Azeri Light',
+                // Medium Sour
+                'Arab Light': 'Arab Light',
+                'Dubai': 'Dubai',
+                'Urals': 'Urals',
+                'Basrah Light': 'Basrah Light',
+                'Kuwait': 'Kuwait',
+                'Murban': 'Murban',
+                // Heavy Sour
+                'Arab Heavy': 'Arab Heavy',
+                'Maya': 'Maya',
+                'WCS': 'Western Canadian Select',
+                'Basrah Heavy': 'Basrah Heavy',
+                'Venezuela': 'Venezuela Merey'
+            };
+            
+            const dbKey = crudeMap[crudeName];
+            const crudeData = crudeOilDatabase[dbKey];
+            
+            console.log('Selected crude:', crudeName, 'Mapped to:', dbKey, 'Data found:', !!crudeData);
+            
+            if (crudeData) {
+                document.getElementById(`crude${crudeNum}API`).textContent = crudeData.api;
+                document.getElementById(`crude${crudeNum}Sulfur`).textContent = crudeData.sulfur;
+                document.getElementById(`crude${crudeNum}Visc`).textContent = crudeData.viscosity || '10'; // Use actual viscosity if available
+                document.getElementById(`crude${crudeNum}Price`).textContent = (currentPrices.brent + (crudeData.typicalDifferential || 0)).toFixed(2);
+                propsDiv.style.display = 'block';
+            } else {
+                console.error('Crude not found in database:', dbKey);
+                alert(`Error: ${crudeName} not found in database. Please try another crude or use Custom entry.`);
+            }
+        }
+        
+        function updateBlendRatio() {
+            const ratio = document.getElementById('blendRatio').value;
+            document.getElementById('ratio1').textContent = ratio;
+            document.getElementById('ratio2').textContent = 100 - ratio;
+        }
+        
+        function calculateQuickBlend() {
+            const crude1Name = document.getElementById('quickCrude1').value;
+            const crude2Name = document.getElementById('quickCrude2').value;
+            
+            if (!crude1Name || !crude2Name) {
+                alert('Please select both crudes');
+                return;
+            }
+            
+            let crude1, crude2;
+            
+            // Handle custom values
+            if (crude1Name === 'Custom') {
+                crude1 = {
+                    api: parseFloat(document.getElementById('custom1API').value) || 30,
+                    sulfur: parseFloat(document.getElementById('custom1Sulfur').value) || 1,
+                    viscosity: parseFloat(document.getElementById('custom1Visc').value) || 10
+                };
+            } else {
+                const crudeMap = {
+                    'WTI': 'WTI (West Texas Intermediate)',
+                    'Brent': 'Brent Blend',
+                    'Bakken': 'Bakken',
+                    'Eagle Ford': 'Eagle Ford',
+                    'Tapis': 'Tapis',
+                    'Bonny Light': 'Bonny Light',
+                    'ESPO': 'ESPO',
+                    'Forcados': 'Forcados',
+                    'Qua Iboe': 'Qua Iboe',
+                    'Azeri Light': 'Azeri Light',
+                    'Arab Light': 'Arab Light',
+                    'Dubai': 'Dubai',
+                    'Urals': 'Urals',
+                    'Basrah Light': 'Basrah Light',
+                    'Kuwait': 'Kuwait',
+                    'Murban': 'Murban',
+                    'Arab Heavy': 'Arab Heavy',
+                    'Maya': 'Maya',
+                    'WCS': 'Western Canadian Select',
+                    'Basrah Heavy': 'Basrah Heavy',
+                    'Venezuela': 'Venezuela Merey'
+                };
+                crude1 = crudeOilDatabase[crudeMap[crude1Name]];
+                if (!crude1) {
+                    alert(`Error: ${crude1Name} not found in database`);
+                    return;
+                }
+            }
+            
+            if (crude2Name === 'Custom') {
+                crude2 = {
+                    api: parseFloat(document.getElementById('custom2API').value) || 30,
+                    sulfur: parseFloat(document.getElementById('custom2Sulfur').value) || 1,
+                    viscosity: parseFloat(document.getElementById('custom2Visc').value) || 10
+                };
+            } else {
+                const crudeMap = {
+                    'WTI': 'WTI (West Texas Intermediate)',
+                    'Brent': 'Brent Blend',
+                    'Bakken': 'Bakken',
+                    'Eagle Ford': 'Eagle Ford',
+                    'Tapis': 'Tapis',
+                    'Bonny Light': 'Bonny Light',
+                    'ESPO': 'ESPO',
+                    'Forcados': 'Forcados',
+                    'Qua Iboe': 'Qua Iboe',
+                    'Azeri Light': 'Azeri Light',
+                    'Arab Light': 'Arab Light',
+                    'Dubai': 'Dubai',
+                    'Urals': 'Urals',
+                    'Basrah Light': 'Basrah Light',
+                    'Kuwait': 'Kuwait',
+                    'Murban': 'Murban',
+                    'Arab Heavy': 'Arab Heavy',
+                    'Maya': 'Maya',
+                    'WCS': 'Western Canadian Select',
+                    'Basrah Heavy': 'Basrah Heavy',
+                    'Venezuela': 'Venezuela Merey'
+                };
+                crude2 = crudeOilDatabase[crudeMap[crude2Name]];
+                if (!crude2) {
+                    alert(`Error: ${crude2Name} not found in database`);
+                    return;
+                }
+            }
+            
+            const ratio1 = parseFloat(document.getElementById('blendRatio').value) / 100;
+            const ratio2 = 1 - ratio1;
+            
+            // Calculate blend properties
+            const sg1 = 141.5 / (crude1.api + 131.5);
+            const sg2 = 141.5 / (crude2.api + 131.5);
+            const blendSG = sg1 * ratio1 + sg2 * ratio2;
+            const blendAPI = (141.5 / blendSG) - 131.5;
+            const blendSulfur = crude1.sulfur * ratio1 + crude2.sulfur * ratio2;
+            
+            const visc1 = crude1.viscosity || 10;
+            const visc2 = crude2.viscosity || 10;
+            const blendViscLog = Math.log(visc1) * ratio1 + Math.log(visc2) * ratio2;
+            const blendVisc = Math.exp(blendViscLog);
+            
+            // Detailed compatibility analysis based on industry standards
+            const apiDiff = Math.abs(crude1.api - crude2.api);
+            const viscRatio = Math.max(visc1, visc2) / Math.min(visc1, visc2);
+            const densityDiff = Math.abs(sg1 - sg2);
+            const sulfurDiff = Math.abs(crude1.sulfur - crude2.sulfur);
+            
+            // Calculate Compatibility Index (CI) - more comprehensive formula
+            // API difference impact (0-4 points)
+            const apiScore = Math.min(apiDiff / 5, 4);
+            
+            // Viscosity ratio impact (0-4 points)  
+            let viscScore = 0;
+            if (viscRatio > 100) viscScore = 4;
+            else if (viscRatio > 50) viscScore = 3.5;
+            else if (viscRatio > 20) viscScore = 3;
+            else if (viscRatio > 10) viscScore = 2;
+            else if (viscRatio > 5) viscScore = 1;
+            else viscScore = viscRatio / 5;
+            
+            // Density difference impact (0-2 points)
+            const densityScore = Math.min(densityDiff * 20, 2);
+            
+            // Sulfur difference impact (0-1 point)
+            const sulfurScore = Math.min(sulfurDiff / 3, 1);
+            
+            // Asphaltene risk factor (0-2 points)
+            let asphalteneRisk = 0;
+            if ((crude1.api > 40 && crude2.api < 25) || (crude2.api > 40 && crude1.api < 25)) {
+                asphalteneRisk = 2; // High risk of asphaltene precipitation
+            } else if (apiDiff > 15) {
+                asphalteneRisk = 1;
+            }
+            
+            // Total Compatibility Index (0-13 scale)
+            const compatibilityIndex = apiScore + viscScore + densityScore + sulfurScore + asphalteneRisk;
+            
+            let compatibility = '';
+            let compatColor = '';
+            let recommendations = [];
+            let technicalIssues = [];
+            
+            if (compatibilityIndex < 2.5) {
+                compatibility = 'Excellent Compatibility';
+                compatColor = '#28a745';
+                recommendations.push('Direct blending without issues');
+                recommendations.push('Standard tank mixing sufficient');
+                technicalIssues.push('✓ Minimal density stratification risk');
+                technicalIssues.push('✓ Stable asphaltene dispersion expected');
+            } else if (compatibilityIndex < 4.5) {
+                compatibility = 'Good Compatibility';
+                compatColor = '#5cb85c';
+                recommendations.push('Suitable for blending with proper mixing');
+                recommendations.push('Use side-entry mixers or circulation');
+                if (viscRatio > 5) {
+                    recommendations.push(`Consider heating heavier component (${visc1 > visc2 ? crude1Name : crude2Name})`);
+                    technicalIssues.push(`⚠ Viscosity ratio of ${viscRatio.toFixed(1)}:1 may slow homogenization`);
+                }
+                if (apiDiff > 8) {
+                    technicalIssues.push(`⚠ API difference of ${apiDiff.toFixed(1)}° requires adequate mixing time`);
+                }
+            } else if (compatibilityIndex < 7) {
+                compatibility = 'Marginal Compatibility';
+                compatColor = '#ffc107';
+                recommendations.push('Requires careful blending management');
+                recommendations.push('Heat both components to 40-50°C');
+                recommendations.push('Use high-shear mixing or inline blending');
+                if (viscRatio > 20) {
+                    recommendations.push('Add 0.5-1% aromatic cutter stock to reduce viscosity');
+                    technicalIssues.push(`⚠ High viscosity ratio (${viscRatio.toFixed(1)}:1) risks poor mixing`);
+                }
+                if (densityDiff > 0.05) {
+                    recommendations.push('Continuous agitation required to prevent settling');
+                    technicalIssues.push(`⚠ Density difference of ${(densityDiff * 1000).toFixed(1)} kg/m³ may cause stratification`);
+                }
+                if (asphalteneRisk > 0) {
+                    recommendations.push('Monitor for asphaltene precipitation');
+                    technicalIssues.push('⚠ Risk of asphaltene destabilization');
+                }
+            } else if (compatibilityIndex < 10) {
+                compatibility = 'Poor Compatibility';
+                compatColor = '#fd7e14';
+                recommendations.push('NOT RECOMMENDED for standard blending');
+                recommendations.push('Consider sequential processing instead');
+                if (ratio1 > 0.3 && ratio1 < 0.7) {
+                    recommendations.push('If blending required: Use 80:20 or 20:80 ratios instead of 50:50');
+                }
+                recommendations.push('Requires compatibility additives (2-3%)');
+                recommendations.push('Maintain temperature > 60°C with continuous mixing');
+                technicalIssues.push(`✗ Severe compatibility issues detected`);
+                technicalIssues.push(`✗ API difference: ${apiDiff.toFixed(1)}°`);
+                technicalIssues.push(`✗ Viscosity ratio: ${viscRatio.toFixed(1)}:1`);
+                if (asphalteneRisk > 1) {
+                    technicalIssues.push('✗ High risk of asphaltene precipitation');
+                }
+            } else {
+                compatibility = 'Incompatible - Do Not Blend';
+                compatColor = '#dc3545';
+                recommendations.push('INCOMPATIBLE - High risk of operational problems');
+                recommendations.push('Tank stratification will occur');
+                recommendations.push('Asphaltene precipitation likely');
+                recommendations.push('Alternative: Process crudes separately');
+                recommendations.push('Emergency only: Use 5% compatibility additive package + continuous high-shear mixing');
+                technicalIssues.push(`✗ Extreme API difference: ${apiDiff.toFixed(1)}°`);
+                technicalIssues.push(`✗ Extreme viscosity ratio: ${viscRatio.toFixed(1)}:1`);
+                technicalIssues.push(`✗ Density difference: ${(densityDiff * 1000).toFixed(1)} kg/m³`);
+                technicalIssues.push('✗ Will form separate phases in storage');
+            }
+            
+            // Price calculation
+            const price1 = currentPrices.brent + (crude1.typicalDifferential || 0);
+            const price2 = currentPrices.brent + (crude2.typicalDifferential || 0);
+            const blendPrice = price1 * ratio1 + price2 * ratio2;
+            
+            // Display results
+            const resultsDiv = document.getElementById('quickBlendResults');
+            resultsDiv.innerHTML = `
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">Blend Analysis Results</h3>
+                <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 20px;">
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <h4 style="color: #495057; margin-bottom: 10px;">Blend Properties</h4>
+                        <div style="line-height: 1.8;">
+                            <div><strong>API Gravity:</strong> ${blendAPI.toFixed(1)}°</div>
+                            <div><strong>Specific Gravity:</strong> ${blendSG.toFixed(4)}</div>
+                            <div><strong>Sulfur Content:</strong> ${blendSulfur.toFixed(2)}%</div>
+                            <div><strong>Viscosity @50°C:</strong> ${blendVisc.toFixed(1)} cSt</div>
+                            <div><strong>Blend Cost:</strong> $${blendPrice.toFixed(2)}/bbl</div>
+                        </div>
+                    </div>
+                    <div style="padding: 15px; background: #f8f9fa; border-radius: 8px;">
+                        <h4 style="color: #495057; margin-bottom: 10px;">Compatibility Assessment</h4>
+                        <div style="padding: 10px; background: ${compatColor}20; border-left: 4px solid ${compatColor}; margin-bottom: 10px;">
+                            <strong style="color: ${compatColor}; font-size: 1.1em;">${compatibility}</strong>
+                            <div style="color: #666; margin-top: 5px; font-size: 0.9em;">
+                                Compatibility Index: ${compatibilityIndex.toFixed(1)}/13
+                            </div>
+                        </div>
+                        <div style="color: #666; font-size: 0.85em; line-height: 1.6;">
+                            <div><strong>API Δ:</strong> ${apiDiff.toFixed(1)}° | <strong>Visc Ratio:</strong> ${viscRatio.toFixed(1)}:1</div>
+                            <div><strong>Density Δ:</strong> ${(densityDiff * 1000).toFixed(1)} kg/m³ | <strong>Sulfur Δ:</strong> ${sulfurDiff.toFixed(2)}%</div>
+                        </div>
+                    </div>
+                </div>
+                <div style="margin-top: 15px; padding: 15px; background: #e8f4fd; border-radius: 8px;">
+                    <h4 style="color: #1565C0; margin-bottom: 10px;">Technical Assessment</h4>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.7;">
+                        ${technicalIssues.map(issue => `<li>${issue}</li>`).join('')}
+                    </ul>
+                </div>
+                <div style="margin-top: 15px; padding: 15px; background: #fff3cd; border-radius: 8px;">
+                    <h4 style="color: #856404; margin-bottom: 10px;">Operational Recommendations</h4>
+                    <ul style="margin: 0; padding-left: 20px; line-height: 1.7;">
+                        ${recommendations.map(rec => `<li>${rec}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+            resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+        
+        // Assay Entry Functions
+        function loadBakkenExample() {
+            document.getElementById('assayName').value = 'Bakken';
+            document.getElementById('assayAPI').value = '43.8';
+            document.getElementById('assaySulfur').value = '0.09';
+            document.getElementById('assayVisc').value = '2.7';
+            document.getElementById('assayPour').value = '-51';
+            document.getElementById('assayMCR').value = '0.9';
+            
+            document.getElementById('assayStatus').innerHTML = 
+                '<div style="padding: 10px; background: #d4edda; color: #155724; border-radius: 5px;">✅ Bakken example loaded</div>';
+        }
+        
+        function addAssayToCrudes() {
+            const name = document.getElementById('assayName').value;
+            const api = parseFloat(document.getElementById('assayAPI').value);
+            const sulfur = parseFloat(document.getElementById('assaySulfur').value);
+            
+            if (!name || !api || isNaN(sulfur)) {
+                alert('Please fill in at least Name, API, and Sulfur');
+                return;
+            }
+            
+            // Add to crude database (temporarily)
+            const key = name.replace(/\s+/g, '_') + '_custom';
+            crudeOilDatabase[key] = {
+                api: api,
+                sulfur: sulfur,
+                viscosity: parseFloat(document.getElementById('assayVisc').value) || 10,
+                region: 'Custom',
+                type: sulfur < 0.5 ? 'Light Sweet' : 'Light Sour',
+                typicalDifferential: 0,
+                yields: { gasoline: 35, diesel: 35, resid: 10 }
+            };
+            
+            // Update dropdowns
+            const option1 = document.createElement('option');
+            option1.value = key;
+            option1.textContent = name + ' (Custom)';
+            document.getElementById('quickCrude1').appendChild(option1);
+            
+            const option2 = document.createElement('option');
+            option2.value = key;
+            option2.textContent = name + ' (Custom)';
+            document.getElementById('quickCrude2').appendChild(option2);
+            
+            document.getElementById('assayStatus').innerHTML = 
+                `<div style="padding: 10px; background: #d4edda; color: #155724; border-radius: 5px;">
+                    ✅ ${name} added to crude library for blending
+                </div>`;
+        }
+        
+        function generateCSV() {
+            const name = document.getElementById('assayName').value || 'Crude';
+            const api = document.getElementById('assayAPI').value || '';
+            const sulfur = document.getElementById('assaySulfur').value || '';
+            const visc = document.getElementById('assayVisc').value || '';
+            const pour = document.getElementById('assayPour').value || '';
+            const mcr = document.getElementById('assayMCR').value || '';
+            
+            const csvContent = `Name,API,Sulfur,Viscosity@50C,Pour Point,MCR
+${name},${api},${sulfur},${visc},${pour},${mcr}`;
+            
+            // Create download link
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${name}_assay.csv`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+            
+            document.getElementById('assayStatus').innerHTML = 
+                '<div style="padding: 10px; background: #d4edda; color: #155724; border-radius: 5px;">✅ CSV file downloaded</div>';
+        }
+        
+        // Blend Optimization Functions
+        function findOptimalBlends() {
+            const apiMin = parseFloat(document.getElementById('targetAPIMin').value);
+            const apiMax = parseFloat(document.getElementById('targetAPIMax').value);
+            const sulfurMax = parseFloat(document.getElementById('targetSulfurMax').value);
+            const viscMax = parseFloat(document.getElementById('targetViscMax').value);
+            
+            if (!apiMin && !sulfurMax && !viscMax) {
+                alert('Please set at least one target specification');
+                return;
+            }
+            
+            const resultsDiv = document.getElementById('optimizationResults');
+            let validBlends = [];
+            
+            // Test different blend combinations
+            const crudeList = [
+                'WTI (West Texas Intermediate)', 'Brent Blend', 'Bakken', 'Eagle Ford', 'Tapis',
+                'Bonny Light', 'ESPO', 'Forcados', 'Qua Iboe', 'Azeri Light',
+                'Arab Light', 'Dubai', 'Urals', 'Kuwait', 'Murban', 'Basrah Light',
+                'Arab Heavy', 'Maya', 'Western Canadian Select', 'Basrah Heavy', 'Venezuela Merey'
+            ];
+            
+            for (let i = 0; i < crudeList.length; i++) {
+                for (let j = i + 1; j < crudeList.length; j++) {
+                    const crude1 = crudeOilDatabase[crudeList[i]];
+                    const crude2 = crudeOilDatabase[crudeList[j]];
+                    
+                    // Test different ratios
+                    for (let ratio = 0.2; ratio <= 0.8; ratio += 0.1) {
+                        // Calculate blend properties
+                        const sg1 = 141.5 / (crude1.api + 131.5);
+                        const sg2 = 141.5 / (crude2.api + 131.5);
+                        const blendSG = sg1 * ratio + sg2 * (1 - ratio);
+                        const blendAPI = (141.5 / blendSG) - 131.5;
+                        const blendSulfur = crude1.sulfur * ratio + crude2.sulfur * (1 - ratio);
+                        
+                        // Check constraints
+                        let valid = true;
+                        if (apiMin && blendAPI < apiMin) valid = false;
+                        if (apiMax && blendAPI > apiMax) valid = false;
+                        if (sulfurMax && blendSulfur > sulfurMax) valid = false;
+                        
+                        if (valid) {
+                            validBlends.push({
+                                crude1: crudeList[i],
+                                crude2: crudeList[j],
+                                ratio1: ratio,
+                                ratio2: 1 - ratio,
+                                api: blendAPI,
+                                sulfur: blendSulfur,
+                                cost: (currentPrices.brent + crude1.typicalDifferential) * ratio + 
+                                      (currentPrices.brent + crude2.typicalDifferential) * (1 - ratio)
+                            });
+                        }
+                    }
+                }
+            }
+            
+            // Sort by cost
+            validBlends.sort((a, b) => a.cost - b.cost);
+            
+            // Display top 5 results
+            if (validBlends.length > 0) {
+                let html = '<h4>Top Optimal Blends (Lowest Cost):</h4>';
+                html += '<table style="width: 100%; margin-top: 15px; border-collapse: collapse;">';
+                html += '<tr style="background: #f0f0f0;"><th style="padding: 10px; border: 1px solid #ddd;">Blend</th><th style="padding: 10px; border: 1px solid #ddd;">Ratio</th><th style="padding: 10px; border: 1px solid #ddd;">API</th><th style="padding: 10px; border: 1px solid #ddd;">Sulfur %</th><th style="padding: 10px; border: 1px solid #ddd;">Cost $/bbl</th></tr>';
+                
+                validBlends.slice(0, 5).forEach(blend => {
+                    html += `<tr>
+                        <td style="padding: 10px; border: 1px solid #ddd;">${blend.crude1.split(' ')[0]} + ${blend.crude2.split(' ')[0]}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">${(blend.ratio1 * 100).toFixed(0)}:${(blend.ratio2 * 100).toFixed(0)}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">${blend.api.toFixed(1)}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">${blend.sulfur.toFixed(2)}</td>
+                        <td style="padding: 10px; border: 1px solid #ddd;">$${blend.cost.toFixed(2)}</td>
+                    </tr>`;
+                });
+                
+                html += '</table>';
+                resultsDiv.innerHTML = html;
+            } else {
+                resultsDiv.innerHTML = '<div style="padding: 15px; background: #f8d7da; color: #721c24; border-radius: 5px;">No blends found meeting the specified constraints. Try relaxing the requirements.</div>';
+            }
+        }
+        
+        // Update regional performance chart
+        function updateRegionalPerformance() {
+            const regions = ['North America', 'Middle East', 'North Sea', 'West Africa', 'Latin America', 'Asia Pacific'];
+            const performance = regions.map(region => {
+                const regionCrudes = Object.entries(crudeOilDatabase)
+                    .filter(([_, data]) => data.region === region)
+                    .map(([name, data]) => ({
+                        name,
+                        margin: ((currentPrices.brent + (data.typicalDifferential || 0)) * 0.15) // Simplified margin
+                    }));
+                
+                const avgMargin = regionCrudes.length > 0 
+                    ? regionCrudes.reduce((sum, c) => sum + c.margin, 0) / regionCrudes.length
+                    : 0;
+                
+                return {
+                    region,
+                    margin: avgMargin,
+                    count: regionCrudes.length
+                };
+            });
+            
+            // Update the regional performance display if it exists
+            const regionalDiv = document.getElementById('regionalPerformance');
+            if (regionalDiv) {
+                regionalDiv.innerHTML = performance.map(r => `
+                    <div style="margin: 10px 0;">
+                        <strong>${r.region}:</strong> $${r.margin.toFixed(2)}/bbl (${r.count} crudes)
+                    </div>
+                `).join('');
+            }
+        }
+        
+        // Start countdown timer
+        function startCountdown() {
+            let timeLeft = 600; // 10 minutes
+            
+            const updateTimer = () => {
+                const minutes = Math.floor(timeLeft / 60);
+                const seconds = timeLeft % 60;
+                const display = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+                
+                const countdownEl = document.getElementById('countdown');
+                if (countdownEl) {
+                    countdownEl.textContent = display;
+                }
+                
+                timeLeft--;
+                if (timeLeft < 0) {
+                    timeLeft = 600;
+                    if (typeof updateHotCrudes === 'function') {
+                        updateHotCrudes();
+                    }
+                }
+            };
+            
+            setInterval(updateTimer, 1000);
+        }
+        
+        // Toggle function for assumptions section
+        function toggleAssumptions() {
+            const content = document.getElementById('assumptionsContent');
+            const toggle = document.getElementById('assumptionsToggle');
+            if (content && toggle) {
+                if (content.style.display === 'none') {
+                    content.style.display = 'block';
+                    toggle.textContent = '▲';
+                } else {
+                    content.style.display = 'none';
+                    toggle.textContent = '▼';
+                }
+            }
+        }
+        
+        // LP Model Functions
+        function populateCrudeDropdown() {
+            const select = document.getElementById('crudeSelect');
+            const crudes = Object.keys(crudeOilDatabase).sort();
+            
+            crudes.forEach(crude => {
+                const option = document.createElement('option');
+                option.value = crude;
+                option.textContent = crude;
+                select.appendChild(option);
+            });
+        }
+        
+        function updateCrudeInfo() {
+            const selectedCrude = document.getElementById('crudeSelect').value;
+            const infoPanel = document.getElementById('crudeInfo');
+            
+            if (!selectedCrude) {
+                infoPanel.style.display = 'none';
+                return;
+            }
+            
+            const crudeData = crudeOilDatabase[selectedCrude];
+            document.getElementById('apiGravity').textContent = crudeData.api + '°';
+            document.getElementById('sulfurContent').textContent = crudeData.sulfur + '%';
+            document.getElementById('crudeRegion').textContent = crudeData.region;
+            document.getElementById('crudeType').textContent = crudeData.type;
+            
+            infoPanel.style.display = 'block';
+        }
+        
+        function togglePricingMethod() {
+            const method = document.getElementById('pricingMethod').value;
+            const flatInput = document.getElementById('flatPriceInput');
+            const diffInput = document.getElementById('differentialPriceInput');
+            
+            if (method === 'flat') {
+                flatInput.style.display = 'block';
+                diffInput.style.display = 'none';
+            } else {
+                flatInput.style.display = 'none';
+                diffInput.style.display = 'block';
+                updateEffectivePrice();
+            }
+        }
+        
+        function updateEffectivePrice() {
+            const benchmark = document.getElementById('benchmark').value;
+            const differential = parseFloat(document.getElementById('differential').value) || 0;
+            const benchmarkPrice = benchmarkPrices[benchmark];
+            const effectivePrice = benchmarkPrice + differential;
+            
+            document.getElementById('benchmarkPrice').textContent = `$${benchmarkPrice.toFixed(2)}`;
+            document.getElementById('effectivePrice').textContent = `$${effectivePrice.toFixed(2)}`;
+        }
+        
+        function calculateProfitability() {
+            const selectedCrude = document.getElementById('crudeSelect').value;
+            
+            if (!selectedCrude) {
+                alert('Please select a crude oil grade');
+                return;
+            }
+            
+            const crudeData = crudeOilDatabase[selectedCrude];
+            const volume = parseFloat(document.getElementById('volume').value);
+            
+            let crudePrice;
+            if (document.getElementById('pricingMethod').value === 'flat') {
+                crudePrice = parseFloat(document.getElementById('crudePrice').value);
+            } else {
+                const benchmark = document.getElementById('benchmark').value;
+                const differential = parseFloat(document.getElementById('differential').value) || 0;
+                crudePrice = benchmarkPrices[benchmark] + differential;
+            }
+            
+            let totalRevenue = 0;
+            const yieldsData = [];
+            const tableBody = document.getElementById('yieldsTableBody');
+            tableBody.innerHTML = '';
+            
+            for (const [product, yieldPercent] of Object.entries(crudeData.yields)) {
+                const productVolume = (volume * yieldPercent) / 100;
+                const productPrice = productPrices[product];
+                const productRevenue = productVolume * productPrice;
+                totalRevenue += productRevenue;
+                
+                yieldsData.push({
+                    product: product,
+                    yield: yieldPercent,
+                    volume: productVolume,
+                    price: productPrice,
+                    revenue: productRevenue
+                });
+                
+                const row = tableBody.insertRow();
+                row.innerHTML = `
+                    <td>${product}</td>
+                    <td>${yieldPercent.toFixed(1)}%</td>
+                    <td>${productVolume.toLocaleString('en-US', {maximumFractionDigits: 0})}</td>
+                    <td>$${productPrice.toFixed(2)}</td>
+                    <td>$${productRevenue.toLocaleString('en-US', {maximumFractionDigits: 0})}</td>
+                `;
+            }
+            
+            const totalCost = volume * crudePrice;
+            const grossProfit = totalRevenue - totalCost;
+            const grossMargin = ((grossProfit / totalRevenue) * 100).toFixed(1);
+            const crackSpread = (totalRevenue - totalCost) / volume;
+            
+            // Update display
+            document.getElementById('profitAmount').textContent = 
+                `$${grossProfit.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+            document.getElementById('grossRevenue').textContent = 
+                `$${totalRevenue.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+            document.getElementById('crudeCost').textContent = 
+                `$${totalCost.toLocaleString('en-US', {maximumFractionDigits: 0})}`;
+            document.getElementById('grossMargin').textContent = `${grossMargin}%`;
+            document.getElementById('crackSpread').textContent = 
+                `$${crackSpread.toFixed(2)}`;
+            
+            updateYieldsChart(yieldsData);
+            
+            document.getElementById('resultsSection').style.display = 'block';
+            
+            // Store last calculation for quick reference
+            window.lastCalculation = {
+                crude: selectedCrude,
+                volume: volume,
+                price: crudePrice,
+                profit: grossProfit,
+                crackSpread: crackSpread,
+                margin: grossMargin
+            };
+            
+            // Generate market comparison
+            const allCrudes = [];
+            for (const [name, data] of Object.entries(crudeOilDatabase)) {
+                allCrudes.push(calculateCrudeProfitability(name, data, volume));
+            }
+            allCrudes.sort((a, b) => b.crackSpread - a.crackSpread);
+            
+            const currentRank = allCrudes.findIndex(c => c.name === selectedCrude) + 1;
+            const topCrude = allCrudes[0];
+            const avgCrackSpread = allCrudes.reduce((sum, c) => sum + c.crackSpread, 0) / allCrudes.length;
+            
+            let comparisonHTML = `
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px;">
+                    <div>
+                        <strong>Market Position:</strong> Ranked #${currentRank} of ${allCrudes.length} crudes<br>
+                        <strong>vs. Market Average:</strong> ${crackSpread > avgCrackSpread ? '+' : ''}$${(crackSpread - avgCrackSpread).toFixed(2)}/bbl
+                    </div>
+                    <div>
+                        <strong>vs. Top Performer (${topCrude.name}):</strong> $${(crackSpread - topCrude.crackSpread).toFixed(2)}/bbl<br>
+                        <strong>Performance Rating:</strong> ${
+                            currentRank <= 3 ? '🏆 Excellent' :
+                            currentRank <= 10 ? '✅ Very Good' :
+                            currentRank <= 20 ? '👍 Good' : '⚠️ Below Average'
+                        }
+                    </div>
+                </div>
+            `;
+            
+            if (currentRank <= 10) {
+                comparisonHTML += `<div style="margin-top: 15px; padding: 10px; background: #e8f5e9; border-radius: 5px; color: #2e7d32;">
+                    <strong>🔥 Hot Crude!</strong> This crude is currently in the top 10 most profitable options.
+                </div>`;
+            }
+            
+            document.getElementById('marketComparison').innerHTML = comparisonHTML;
+        }
+        
+        function updateYieldsChart(yieldsData) {
+            const ctx = document.getElementById('yieldsChart').getContext('2d');
+            
+            if (yieldsChart) {
+                yieldsChart.destroy();
+            }
+            
+            yieldsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: yieldsData.map(d => d.product),
+                    datasets: [
+                        {
+                            label: 'Yield %',
+                            data: yieldsData.map(d => d.yield),
+                            backgroundColor: 'rgba(102, 126, 234, 0.6)',
+                            borderColor: 'rgba(102, 126, 234, 1)',
+                            borderWidth: 2,
+                            yAxisID: 'y-yield'
+                        },
+                        {
+                            label: 'Revenue ($/day)',
+                            data: yieldsData.map(d => d.revenue),
+                            backgroundColor: 'rgba(17, 153, 142, 0.6)',
+                            borderColor: 'rgba(17, 153, 142, 1)',
+                            borderWidth: 2,
+                            yAxisID: 'y-revenue',
+                            type: 'line'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Product Yields and Revenue Analysis',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    let label = context.dataset.label || '';
+                                    if (label) {
+                                        label += ': ';
+                                    }
+                                    if (context.dataset.yAxisID === 'y-revenue') {
+                                        label += '$' + context.parsed.y.toLocaleString('en-US', {maximumFractionDigits: 0});
+                                    } else {
+                                        label += context.parsed.y.toFixed(1) + '%';
+                                    }
+                                    return label;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        'y-yield': {
+                            type: 'linear',
+                            display: true,
+                            position: 'left',
+                            title: {
+                                display: true,
+                                text: 'Yield (%)'
+                            }
+                        },
+                        'y-revenue': {
+                            type: 'linear',
+                            display: true,
+                            position: 'right',
+                            title: {
+                                display: true,
+                                text: 'Revenue ($/day)'
+                            },
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                callback: function(value) {
+                                    return '$' + (value/1000).toFixed(0) + 'K';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        // Initialize application
+        function initializeApp() {
+            // Only populate dropdown if element exists
+            if (document.getElementById('crudeSelect')) {
+                populateCrudeDropdown();
+                document.getElementById('crudeSelect').addEventListener('change', updateCrudeInfo);
+            }
+            
+            // Setup event listeners only if elements exist
+            if (document.getElementById('pricingMethod')) {
+                document.getElementById('pricingMethod').addEventListener('change', togglePricingMethod);
+            }
+            if (document.getElementById('benchmark')) {
+                document.getElementById('benchmark').addEventListener('change', updateEffectivePrice);
+            }
+            if (document.getElementById('differential')) {
+                document.getElementById('differential').addEventListener('input', updateEffectivePrice);
+            }
+            
+            // Add keyboard shortcuts
+            document.addEventListener('keydown', (e) => {
+                // Alt+D for Dashboard
+                if (e.altKey && e.key === 'd') {
+                    e.preventDefault();
+                    showDashboard();
+                }
+                // Alt+L for LP Model
+                if (e.altKey && e.key === 'l') {
+                    e.preventDefault();
+                    showLPModel();
+                }
+                // Alt+B for Blending Calculator
+                if (e.altKey && e.key === 'b') {
+                    e.preventDefault();
+                    showBlendingCalc();
+                }
+                // Alt+C for Calculate (when in LP Model)
+                if (e.altKey && e.key === 'c') {
+                    const lpModelPage = document.getElementById('lpModelPage');
+                    if (lpModelPage && lpModelPage.style.display !== 'none') {
+                        e.preventDefault();
+                        calculateProfitability();
+                    }
+                }
+            });
+            
+            // Initial hot crudes calculation
+            if (typeof updateHotCrudes === 'function') {
+                updateHotCrudes();
+            }
+            
+            // Update regional performance if function exists
+            if (typeof updateRegionalPerformance === 'function') {
+                updateRegionalPerformance();
+            }
+            
+            // Start countdown timer
+            if (typeof startCountdown === 'function') {
+                startCountdown();
+            }
+            
+            // Update every 10 minutes
+            updateInterval = setInterval(() => {
+                if (typeof updateHotCrudes === 'function') {
+                    updateHotCrudes();
+                }
+            }, 600000); // 10 minutes
+            
+            // Add tooltip for shortcuts
+            const navButtons = document.querySelectorAll('.nav-btn');
+            if (navButtons[0]) navButtons[0].title = 'Dashboard (Alt+D)';
+            if (navButtons[1]) navButtons[1].title = 'LP Model (Alt+L)';
+            if (navButtons[2]) navButtons[2].title = 'Blending Calculator (Alt+B)';
+        }
+        
+        // Initialize on page load
+        window.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
