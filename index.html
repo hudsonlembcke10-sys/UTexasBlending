@@ -196,6 +196,58 @@
         
         .fire-icon { color: #e74c3c; }
         
+        /* Toggle Switch Styles */
+        .toggle-switch {
+            position: relative;
+            display: inline-block;
+            width: 60px !important;
+            height: 28px !important;
+        }
+        
+        .toggle-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+        
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #2196F3;
+            transition: .4s;
+            border-radius: 34px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 20px;
+            width: 20px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+            box-shadow: 0 2px 3px rgba(0,0,0,0.2);
+        }
+        
+        input:not(:checked) + .slider {
+            background-color: #ccc;
+        }
+        
+        input:checked + .slider:before {
+            transform: translateX(0px);
+        }
+        
+        input:not(:checked) + .slider:before {
+            transform: translateX(32px);
+        }
+        
         /* Refinery Configuration Tabs */
         .refinery-tabs {
             display: flex;
@@ -361,7 +413,7 @@
     <div class="nav-header">
         <div class="nav-content">
             <div class="logo">
-                <div class="logo-icon">🏭</div>
+                <div class="logo-icon"></div>
                 <span>Refinery Analytics Pro</span>
             </div>
             <div class="nav-buttons">
@@ -387,51 +439,51 @@
             </div>
             
             <!-- Crude Prices -->
-            <h3 class="product-category-header">🛢️ Crude Oil Benchmarks</h3>
+            <h3 class="product-category-header">Crude Oil Benchmarks</h3>
             <div class="market-prices">
                 <div class="price-card" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
                     <div class="price-label">Brent Crude</div>
-                    <div class="price-value">$76.22</div>
+                    <div class="price-value" id="display-brent">$64.18</div>
                     <div class="price-change">North Sea</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
                     <div class="price-label">WTI Crude</div>
-                    <div class="price-value">$73.56</div>
+                    <div class="price-value" id="display-wti">$59.67</div>
                     <div class="price-change">Cushing</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
                     <div class="price-label">Dubai Crude</div>
-                    <div class="price-value">$75.89</div>
+                    <div class="price-value" id="display-dubai">$63.76</div>
                     <div class="price-change">Middle East</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #2c3e50 0%, #34495e 100%);">
                     <div class="price-label">Urals</div>
-                    <div class="price-value">$60.45</div>
+                    <div class="price-value" id="display-urals">$46.49</div>
                     <div class="price-change">Russia</div>
                 </div>
             </div>
             
             <!-- Light Products -->
-            <h3 class="product-category-header">⚡ Light Products</h3>
+            <h3 class="product-category-header">Light Products</h3>
             <div class="market-prices">
                 <div class="price-card" style="background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);">
                     <div class="price-label">LPG (Propane)</div>
-                    <div class="price-value">$45.80</div>
+                    <div class="price-value" id="display-lpg">$34.37</div>
                     <div class="price-change">$/bbl FOB</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);">
                     <div class="price-label">Light Naphtha</div>
-                    <div class="price-value">$78.50</div>
+                    <div class="price-value" id="display-lightNaphtha">$53.84</div>
                     <div class="price-change">C5-C6 $/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);">
                     <div class="price-label">Full Range Naphtha</div>
-                    <div class="price-value">$82.15</div>
+                    <div class="price-value" id="display-naphtha">$60.57</div>
                     <div class="price-change">$/bbl CIF</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #56CCF2 0%, #2F80ED 100%);">
                     <div class="price-label">Reformate</div>
-                    <div class="price-value">$95.30</div>
+                    <div class="price-value" id="display-reformate">$103.94</div>
                     <div class="price-change">95 RON $/bbl</div>
                 </div>
             </div>
@@ -441,17 +493,17 @@
             <div class="market-prices">
                 <div class="price-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
                     <div class="price-label">Regular (87 RON)</div>
-                    <div class="price-value">$90.30</div>
+                    <div class="price-value" id="display-gasoline87">$75.80</div>
                     <div class="price-change">RBOB $/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
                     <div class="price-label">Premium (92 RON)</div>
-                    <div class="price-value">$92.85</div>
+                    <div class="price-value" id="display-gasoline92">$83.67</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
                     <div class="price-label">Super (95 RON)</div>
-                    <div class="price-value">$94.50</div>
+                    <div class="price-value" id="display-gasoline95">$83.67</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
@@ -461,12 +513,12 @@
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
                     <div class="price-label">Alkylate</div>
-                    <div class="price-value">$105.50</div>
+                    <div class="price-value" id="display-alkylate">$85.35</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #11998e 0%, #38ef7d 100%);">
                     <div class="price-label">MTBE</div>
-                    <div class="price-value">$88.75</div>
+                    <div class="price-value" id="display-mtbe">$98.39</div>
                     <div class="price-change">$/bbl</div>
                 </div>
             </div>
@@ -476,32 +528,32 @@
             <div class="market-prices">
                 <div class="price-card" style="background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);">
                     <div class="price-label">Kerosene</div>
-                    <div class="price-value">$93.20</div>
+                    <div class="price-value" id="display-kerosene">$93.83</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);">
                     <div class="price-label">Jet A-1</div>
-                    <div class="price-value">$95.50</div>
+                    <div class="price-value" id="display-jet">$89.21</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);">
                     <div class="price-label">ULSD (10ppm)</div>
-                    <div class="price-value">$98.70</div>
+                    <div class="price-value" id="display-ulsd">$93.03</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);">
                     <div class="price-label">Diesel (50ppm)</div>
-                    <div class="price-value">$96.40</div>
+                    <div class="price-value" id="display-diesel50">$93.03</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);">
                     <div class="price-label">Heating Oil</div>
-                    <div class="price-value">$94.85</div>
+                    <div class="price-value" id="display-heatingOil">$86.81</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #f2994a 0%, #f2c94c 100%);">
                     <div class="price-label">Marine Gasoil</div>
-                    <div class="price-value">$88.40</div>
+                    <div class="price-value" id="display-marineGasoil">$91.44</div>
                     <div class="price-change">0.5% S $/bbl</div>
                 </div>
             </div>
@@ -511,37 +563,37 @@
             <div class="market-prices">
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
                     <div class="price-label">VGO</div>
-                    <div class="price-value">$68.90</div>
+                    <div class="price-value" id="display-vgo">$68.90</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
                     <div class="price-label">Light Cycle Oil</div>
-                    <div class="price-value">$72.30</div>
+                    <div class="price-value" id="display-lco">$82.59</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
                     <div class="price-label">Heavy Cycle Oil</div>
-                    <div class="price-value">$58.20</div>
+                    <div class="price-value" id="display-hco">$56.10</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
                     <div class="price-label">Coker Gas Oil</div>
-                    <div class="price-value">$65.50</div>
+                    <div class="price-value" id="display-cgo">$65.50</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
                     <div class="price-label">Slurry Oil</div>
-                    <div class="price-value">$52.15</div>
+                    <div class="price-value" id="display-slurry">$56.10</div>
                     <div class="price-change">$/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
                     <div class="price-label">HSFO (3.5% S)</div>
-                    <div class="price-value">$55.40</div>
+                    <div class="price-value" id="display-hsfo">$53.42</div>
                     <div class="price-change">380cst $/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
                     <div class="price-label">VLSFO (0.5% S)</div>
-                    <div class="price-value">$62.80</div>
+                    <div class="price-value" id="display-vlsfo">$65.30</div>
                     <div class="price-change">IMO2020 $/bbl</div>
                 </div>
                 <div class="price-card" style="background: linear-gradient(135deg, #434343 0%, #000000 100%);">
@@ -572,7 +624,7 @@
             </div>
             
             <!-- Key Crack Spreads -->
-            <h3 class="product-category-header">📈 Key Crack Spreads & Differentials</h3>
+            <h3 class="product-category-header">Key Crack Spreads & Differentials</h3>
             <div class="market-prices">
                 <div class="price-card" style="background: linear-gradient(135deg, #eb3349 0%, #f45c43 100%);">
                     <div class="price-label">3-2-1 Crack</div>
@@ -619,25 +671,32 @@
         
         <!-- Hot Crudes Section with Yield-Based Margins -->
         <div class="hot-crudes-container">
-            <div class="hot-crudes-header">
+            <div class="hot-crudes-header" style="position: relative;">
                 <h2 class="hot-crudes-title">
-                    <span class="fire-icon">🔥</span>
                     Hot Crudes - Top 10 Most Profitable
                 </h2>
+                <div style="position: absolute; right: 20px; top: 50%; transform: translateY(-50%); display: flex; align-items: center; gap: 10px;">
+                    <span style="font-size: 14px; color: #666; font-weight: 600;">CIF Houston</span>
+                    <label class="toggle-switch">
+                        <input type="checkbox" id="cifToggle" checked onchange="toggleCIFMode()">
+                        <span class="slider"></span>
+                    </label>
+                    <span style="font-size: 14px; color: #666; font-weight: 600;">FOB Origin</span>
+                </div>
             </div>
             
             <!-- Refinery Configuration Tabs -->
             <div class="refinery-tabs">
                 <div class="refinery-tab active" onclick="switchRefineryConfig('simple')">
-                    🏭 Simple Refinery<br>
+                    Simple Refinery<br>
                     <small>(CDU + VDU)</small>
                 </div>
                 <div class="refinery-tab" onclick="switchRefineryConfig('medium')">
-                    🏭🔧 Medium Complexity<br>
+                    Medium Complexity<br>
                     <small>(CDU + VDU + FCC)</small>
                 </div>
                 <div class="refinery-tab" onclick="switchRefineryConfig('complex')">
-                    🏭⚡ Complex Refinery<br>
+                    Complex Refinery<br>
                     <small>(CDU + VDU + FCC + Coker)</small>
                 </div>
             </div>
@@ -656,7 +715,7 @@
                         <th>Crude Type</th>
                         <th>Origin</th>
                         <th>API/Sulfur</th>
-                        <th>CIF Houston</th>
+                        <th id="priceColumnHeader">CIF Houston</th>
                         <th>Key Yields</th>
                         <th>Revenue/bbl</th>
                         <th>Margin/bbl</th>
@@ -672,7 +731,7 @@
         <div class="upgrade-section">
             <div class="hot-crudes-header">
                 <h2 class="hot-crudes-title">
-                    <span style="color: #3498db;">⚡</span>
+                    <span style="color: #3498db;"></span>
                     Upgrade Economics - FCC + Coker Addition Analysis
                 </h2>
             </div>
@@ -687,7 +746,7 @@
                 <!-- Top 5 Winners -->
                 <div>
                     <h3 style="color: #27ae60; margin-bottom: 15px;">
-                        📈 Top 5 Winners from FCC + Coker Addition
+                        Top 5 Winners from FCC + Coker Addition
                     </h3>
                     <table class="upgrade-table">
                         <thead>
@@ -747,7 +806,7 @@
         
         <!-- Market Trends Section -->
         <div class="hot-crudes-container" style="margin-top: 30px;">
-            <h2 class="hot-crudes-title">📈 Market Trends & Outlook</h2>
+            <h2 class="hot-crudes-title">Market Trends & Outlook <span id="price-timestamp" style="font-size: 0.6em; font-weight: normal; color: #7f8c8d; float: right;">Last updated: Loading...</span></h2>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
                 <div>
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #e0e0e0;">
@@ -755,21 +814,21 @@
                             <strong>3-2-1 Crack Spread</strong>
                             <div style="font-size: 0.9em; color: #666;">Gulf Coast Benchmark</div>
                         </div>
-                        <div style="font-size: 1.2em; font-weight: bold; color: #dc3545;">$14.85/bbl ▼ -8.2%</div>
+                        <div id="market-crack321" style="font-size: 1.2em; font-weight: bold; color: #666;">Calculating...</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #e0e0e0;">
                         <div>
                             <strong>Diesel Crack Spread</strong>
                             <div style="font-size: 0.9em; color: #666;">ULSD vs Brent</div>
                         </div>
-                        <div style="font-size: 1.2em; font-weight: bold; color: #28a745;">$22.48/bbl ▲ +12.5%</div>
+                        <div id="market-dieselcrack" style="font-size: 1.2em; font-weight: bold; color: #666;">Calculating...</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
                         <div>
                             <strong>Gasoline Crack Spread</strong>
                             <div style="font-size: 0.9em; color: #666;">RBOB vs Brent</div>
                         </div>
-                        <div style="font-size: 1.2em; font-weight: bold; color: #dc3545;">$14.08/bbl ▼ -5.3%</div>
+                        <div id="market-gascrack" style="font-size: 1.2em; font-weight: bold; color: #666;">Calculating...</div>
                     </div>
                 </div>
                 <div>
@@ -778,21 +837,21 @@
                             <strong>Heavy-Light Differential</strong>
                             <div style="font-size: 0.9em; color: #666;">Maya vs WTI</div>
                         </div>
-                        <div style="font-size: 1.2em; font-weight: bold; color: #28a745;">$18.50/bbl ▲ +15.2%</div>
+                        <div id="market-heavylight" style="font-size: 1.2em; font-weight: bold; color: #666;">Calculating...</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px; border-bottom: 1px solid #e0e0e0;">
                         <div>
                             <strong>Brent-Dubai EFS</strong>
                             <div style="font-size: 0.9em; color: #666;">East-West Spread</div>
                         </div>
-                        <div style="font-size: 1.2em; font-weight: bold; color: #ffc107;">$0.33/bbl → 0%</div>
+                        <div id="market-brentdubai" style="font-size: 1.2em; font-weight: bold; color: #666;">Calculating...</div>
                     </div>
                     <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px;">
                         <div>
                             <strong>WCS Discount</strong>
                             <div style="font-size: 0.9em; color: #666;">vs WTI</div>
                         </div>
-                        <div style="font-size: 1.2em; font-weight: bold; color: #dc3545;">$14.75/bbl ▼ -3.1%</div>
+                        <div id="market-wcsdiscount" style="font-size: 1.2em; font-weight: bold; color: #666;">Calculating...</div>
                     </div>
                 </div>
             </div>
@@ -809,7 +868,7 @@
         
         <!-- Top Performer Section -->
         <div class="hot-crudes-container" style="margin-top: 30px; background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%); color: white;">
-            <h2 style="font-size: 1.8em; margin-bottom: 20px; color: white;">🏆 Today's Top Performer</h2>
+            <h2 style="font-size: 1.8em; margin-bottom: 20px; color: white;">Today's Top Performer</h2>
             <div style="display: grid; grid-template-columns: 1fr 2fr; gap: 30px;">
                 <div style="text-align: center;">
                     <div style="font-size: 3em; margin-bottom: 10px;">🥇</div>
@@ -862,7 +921,7 @@
     <!-- LP Model Page -->
     <div id="lpModelPage" class="dashboard-container" style="display: none;">
         <div class="hot-crudes-container">
-            <h2 class="hot-crudes-title">📈 Linear Programming Optimization Model</h2>
+            <h2 class="hot-crudes-title">Linear Programming Optimization Model</h2>
             
             <div class="refinery-description" style="background: #e8f5e9; border-left-color: #4caf50;">
                 <h4>Refinery Optimization Tool</h4>
@@ -934,14 +993,14 @@
     <!-- Blending Calculator Page -->
     <div id="blendingPage" class="dashboard-container" style="display: none;">
         <div class="hot-crudes-container">
-            <h2 class="hot-crudes-title">⚗️ Crude Oil Blending Calculator</h2>
+            <h2 class="hot-crudes-title">Crude Oil Blending Calculator</h2>
             
             <div class="refinery-description" style="background: #fce4ec; border-left-color: #e91e63;">
                 <h4>Blend Optimization Tool</h4>
                 <p>Calculate optimal blend ratios and evaluate compatibility.</p>
             </div>
             
-            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
+            <div id="mainBlendingSection" style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-bottom: 30px;">
                 <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
                     <h3 style="color: #2c3e50; margin-bottom: 20px;">Component 1</h3>
                     
@@ -1023,14 +1082,77 @@
             </div>
             
             <button onclick="calculateBlend()" style="background: linear-gradient(135deg, #e91e63 0%, #f06292 100%); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; margin-bottom: 30px;">
-                🧪 Calculate Blend Properties
+                Calculate Blend Properties
             </button>
             
             <div id="blendResults" style="display: none;"></div>
             
+            <!-- Blend Optimization Feature -->
+            <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 25px; border-radius: 15px; margin-top: 40px; color: white;">
+                <h3 style="margin-bottom: 20px;">Blend Optimization - Find Optimal Blends for Target Specs</h3>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Target API Gravity:</label>
+                        <input type="number" id="targetAPI" placeholder="e.g., 35" step="0.1" style="width: 100%; padding: 8px; border: none; border-radius: 4px; color: #333;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Target Sulfur (%):</label>
+                        <input type="number" id="targetSulfur" placeholder="e.g., 1.5" step="0.01" style="width: 100%; padding: 8px; border: none; border-radius: 4px; color: #333;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Reference Crude (Optional):</label>
+                        <select id="targetCrude" style="width: 100%; padding: 8px; border: none; border-radius: 4px; color: #333;">
+                            <option value="">-- Custom Specs --</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Max Allowed Difference:</label>
+                        <select id="toleranceLevel" style="width: 100%; padding: 8px; border: none; border-radius: 4px; color: #333;">
+                            <option value="tight">Tight (±0.5 API, ±0.1% S)</option>
+                            <option value="normal" selected>Normal (±1.0 API, ±0.2% S)</option>
+                            <option value="loose">Loose (±2.0 API, ±0.4% S)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Blend Volume (bbl):</label>
+                        <input type="number" id="optimizeVolume" value="100000" step="10000" style="width: 100%; padding: 8px; border: none; border-radius: 4px; color: #333;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Optimization Priority:</label>
+                        <select id="optimizePriority" style="width: 100%; padding: 8px; border: none; border-radius: 4px; color: #333;">
+                            <option value="cost">Lowest Cost</option>
+                            <option value="margin">Highest Margin</option>
+                            <option value="compatibility">Best Compatibility</option>
+                            <option value="logistics">Easiest Logistics</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; font-weight: 600;">Compatibility Check:</label>
+                        <select id="compatibilityStrict" style="width: 100%; padding: 8px; border: none; border-radius: 4px; color: #333;">
+                            <option value="strict">Strict (CII < 0.7)</option>
+                            <option value="moderate" selected>Moderate (CII < 0.9)</option>
+                            <option value="any">Any (No CII limit)</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <button onclick="findOptimalBlends()" style="background: white; color: #667eea; border: none; padding: 12px 30px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer; margin-right: 10px;">
+                    Find Optimal Blends
+                </button>
+                <button onclick="clearOptimizationResults()" style="background: rgba(255,255,255,0.2); color: white; border: 1px solid white; padding: 12px 30px; border-radius: 8px; font-size: 1em; font-weight: 600; cursor: pointer;">
+                    Clear Results
+                </button>
+                
+                <div id="optimizationResults" style="display: none; margin-top: 20px;"></div>
+            </div>
+            
             <!-- Custom Crude Addition Section -->
             <div style="background: #e8eaf6; padding: 25px; border-radius: 15px; margin-top: 40px;">
-                <h3 style="color: #2c3e50; margin-bottom: 20px;">➕ Add Custom Crude Oil</h3>
+                <h3 style="color: #2c3e50; margin-bottom: 20px;">Add Custom Crude Oil</h3>
                 
                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-bottom: 20px;">
                     <div>
@@ -1181,14 +1303,13 @@
                 </div>
             </div>
             
-            <div id="blendResults" style="display: none;"></div>
         </div>
     </div>
     
     <!-- Custom Crude Entry Page -->
     <div id="customCrudePage" class="dashboard-container" style="display: none;">
         <div class="hot-crudes-container">
-            <h2 class="hot-crudes-title">➕ Add Custom Crude Oil</h2>
+            <h2 class="hot-crudes-title">Add Custom Crude Oil</h2>
             
             <div class="refinery-description" style="background: #e1f5fe; border-left-color: #03a9f4;">
                 <h4>Custom Crude Database</h4>
@@ -1266,7 +1387,7 @@
             </div>
             
             <button onclick="addCustomCrude()" style="background: linear-gradient(135deg, #03a9f4 0%, #00bcd4 100%); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; margin-bottom: 20px;">
-                ➕ Add Crude to Database
+                Add Crude to Database
             </button>
             
             <button onclick="clearCustomForm()" style="background: #6c757d; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 1em; cursor: pointer; margin-left: 10px;">
@@ -1299,7 +1420,7 @@
                     <div style="background: #f8f9fa; padding: 20px; border-radius: 10px;">
                         <div style="margin-bottom: 15px;">
                             <label style="display: block; margin-bottom: 5px; font-weight: 600;">Base Crude Cost ($/bbl):</label>
-                            <input type="number" id="baseCrudeCost" value="75" step="1" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
+                            <input type="number" id="baseCrudeCost" value="60" step="1" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 5px;">
                         </div>
                         
                         <div style="margin-bottom: 15px;">
@@ -1391,7 +1512,7 @@
             
             <div style="margin-top: 30px; text-align: center;">
                 <button onclick="saveAssumptions()" style="background: linear-gradient(135deg, #4caf50 0%, #45a049 100%); color: white; border: none; padding: 15px 40px; border-radius: 8px; font-size: 1.1em; font-weight: 600; cursor: pointer; margin-right: 10px;">
-                    💾 Save Settings
+                    Save Settings
                 </button>
                 <button onclick="resetAssumptions()" style="background: #f44336; color: white; border: none; padding: 15px 30px; border-radius: 8px; font-size: 1em; cursor: pointer;">
                     ↺ Reset to Defaults
@@ -1399,6 +1520,235 @@
             </div>
             
             <div id="assumptionsStatus" style="margin-top: 20px;"></div>
+        </div>
+        
+        <!-- Secret Price Update Button -->
+        <button onclick="showPricingPage()" style="position: fixed; bottom: 20px; right: 20px; width: 50px; height: 50px; border-radius: 50%; background: linear-gradient(135deg, #ffd700 0%, #ffb300 100%); border: 2px solid #fff; box-shadow: 0 4px 15px rgba(0,0,0,0.3); cursor: pointer; display: flex; align-items: center; justify-content: center; font-size: 24px; color: #fff; font-weight: bold; z-index: 1000; transition: transform 0.3s;" onmouseover="this.style.transform='scale(1.1)'" onmouseout="this.style.transform='scale(1)'">
+            $
+        </button>
+    </div>
+    
+    <!-- Secret Pricing Update Page -->
+    <div id="pricingPage" style="display: none;" class="dashboard-container">
+        <div class="dashboard-header">
+            <h1 class="dashboard-title">🔐 Market Pricing Control Center</h1>
+            <div class="nav-buttons">
+                <button class="nav-btn" onclick="showAssumptions()">← Back to Settings</button>
+            </div>
+        </div>
+        
+        <div style="padding: 40px; background: white; border-radius: 15px; margin: 20px; box-shadow: 0 10px 40px rgba(0,0,0,0.2);">
+            <h2 style="color: #2c3e50; margin-bottom: 30px;">Update Market Prices</h2>
+            <p style="color: #7f8c8d; margin-bottom: 30px;">All prices in $/barrel. Crack spreads will be calculated automatically based on product-crude relationships.</p>
+            
+            <!-- Crude Oil Prices -->
+            <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #34495e; margin-bottom: 15px;">Benchmark Crude Prices</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Brent ($/bbl):</label>
+                        <input type="number" id="price_brent" value="64.18" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">WTI ($/bbl):</label>
+                        <input type="number" id="price_wti" value="59.67" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Dubai ($/bbl):</label>
+                        <input type="number" id="price_dubai" value="63.76" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Maya ($/bbl):</label>
+                        <input type="number" id="price_maya" value="54.24" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">WCS ($/bbl):</label>
+                        <input type="number" id="price_wcs" value="53.30" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Light Products -->
+            <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #2e7d32; margin-bottom: 15px;">Light Products</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">LPG ($/bbl):</label>
+                        <input type="number" id="price_lpg" value="34.37" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Propane ($/bbl):</label>
+                        <input type="number" id="price_propane" value="30.50" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Butane ($/bbl):</label>
+                        <input type="number" id="price_butane" value="38.24" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Light Naphtha ($/bbl):</label>
+                        <input type="number" id="price_lightNaphtha" value="53.84" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Naphtha ($/bbl):</label>
+                        <input type="number" id="price_naphtha" value="60.57" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Reformate ($/bbl):</label>
+                        <input type="number" id="price_reformate" value="103.94" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Gasoline Products -->
+            <div style="background: #fff3e0; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #e65100; margin-bottom: 15px;">⛽ Gasoline Products</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Regular 87 ($/bbl):</label>
+                        <input type="number" id="price_gasoline87" value="75.80" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Premium 92 ($/bbl):</label>
+                        <input type="number" id="price_gasoline92" value="83.67" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Super 95 ($/bbl):</label>
+                        <input type="number" id="price_gasoline95" value="83.67" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Alkylate ($/bbl):</label>
+                        <input type="number" id="price_alkylate" value="85.35" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">MTBE ($/bbl):</label>
+                        <input type="number" id="price_mtbe" value="98.39" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Middle Distillates -->
+            <div style="background: #e3f2fd; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #1565c0; margin-bottom: 15px;">✈️ Middle Distillates</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Kerosene ($/bbl):</label>
+                        <input type="number" id="price_kerosene" value="93.83" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Jet Fuel ($/bbl):</label>
+                        <input type="number" id="price_jet" value="89.21" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">ULSD ($/bbl):</label>
+                        <input type="number" id="price_ulsd" value="93.03" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Diesel 50ppm ($/bbl):</label>
+                        <input type="number" id="price_diesel50" value="93.03" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Heating Oil ($/bbl):</label>
+                        <input type="number" id="price_heatingOil" value="86.81" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Marine Gasoil ($/bbl):</label>
+                        <input type="number" id="price_marineGasoil" value="91.44" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Heavy Products -->
+            <div style="background: #fce4ec; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #c2185b; margin-bottom: 15px;">Heavy Products</h3>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">VGO ($/bbl):</label>
+                        <input type="number" id="price_vgo" value="68.90" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">LCO ($/bbl):</label>
+                        <input type="number" id="price_lco" value="82.59" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">HCO/Slurry ($/bbl):</label>
+                        <input type="number" id="price_hco" value="56.10" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Coker Gasoil ($/bbl):</label>
+                        <input type="number" id="price_cgo" value="65.50" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">HSFO 3.5% ($/bbl):</label>
+                        <input type="number" id="price_hsfo" value="53.42" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">VLSFO 0.5% ($/bbl):</label>
+                        <input type="number" id="price_vlsfo" value="65.30" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">LS Resid 1% ($/bbl):</label>
+                        <input type="number" id="price_lsResid" value="63.33" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Pet Coke ($/bbl):</label>
+                        <input type="number" id="price_coke" value="25.50" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                    <div>
+                        <label style="display: block; margin-bottom: 5px; color: #555;">Sulfur ($/bbl equiv):</label>
+                        <input type="number" id="price_sulfur" value="2.50" step="0.01" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;">
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Calculated Crack Spreads -->
+            <div style="background: #f3e5f5; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                <h3 style="color: #6a1b9a; margin-bottom: 15px;">Calculated Crack Spreads</h3>
+                <p style="color: #7f8c8d; font-size: 0.9em; margin-bottom: 15px;">These are calculated automatically based on product-crude relationships</p>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px;">
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #9c27b0;">
+                        <div style="font-weight: bold; color: #6a1b9a;">3-2-1 Crack Spread</div>
+                        <div id="calc_321crack" style="font-size: 1.5em; color: #333; margin-top: 5px;">$0.00/bbl</div>
+                        <div style="font-size: 0.8em; color: #999; margin-top: 5px;">(2×Gas87 + 1×ULSD)/3 - WTI</div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #7b1fa2;">
+                        <div style="font-weight: bold; color: #6a1b9a;">Diesel Crack</div>
+                        <div id="calc_dieselcrack" style="font-size: 1.5em; color: #333; margin-top: 5px;">$0.00/bbl</div>
+                        <div style="font-size: 0.8em; color: #999; margin-top: 5px;">ULSD - Brent</div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #8e24aa;">
+                        <div style="font-weight: bold; color: #6a1b9a;">Gasoline Crack</div>
+                        <div id="calc_gascrack" style="font-size: 1.5em; color: #333; margin-top: 5px;">$0.00/bbl</div>
+                        <div style="font-size: 0.8em; color: #999; margin-top: 5px;">Gas87 - Brent</div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #ab47bc;">
+                        <div style="font-weight: bold; color: #6a1b9a;">Heavy-Light Diff</div>
+                        <div id="calc_heavylight" style="font-size: 1.5em; color: #333; margin-top: 5px;">$0.00/bbl</div>
+                        <div style="font-size: 0.8em; color: #999; margin-top: 5px;">WTI - Maya</div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #ba68c8;">
+                        <div style="font-weight: bold; color: #6a1b9a;">WCS Discount</div>
+                        <div id="calc_wcsdiscount" style="font-size: 1.5em; color: #333; margin-top: 5px;">$0.00/bbl</div>
+                        <div style="font-size: 0.8em; color: #999; margin-top: 5px;">WTI - WCS</div>
+                    </div>
+                    <div style="background: white; padding: 15px; border-radius: 8px; border-left: 4px solid #ce93d8;">
+                        <div style="font-weight: bold; color: #6a1b9a;">Brent-Dubai EFS</div>
+                        <div id="calc_brentdubai" style="font-size: 1.5em; color: #333; margin-top: 5px;">$0.00/bbl</div>
+                        <div style="font-size: 0.8em; color: #999; margin-top: 5px;">Brent - Dubai</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Update Buttons -->
+            <div style="display: flex; gap: 20px; justify-content: center; margin-top: 30px;">
+                <button onclick="updateAllPrices()" style="padding: 15px 40px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    Update All Prices
+                </button>
+                <button onclick="calculateCrackSpreads()" style="padding: 15px 40px; background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); color: white; border: none; border-radius: 8px; font-size: 1.1em; font-weight: bold; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    Recalculate Spreads
+                </button>
+            </div>
+            
+            <div id="updateStatus" style="margin-top: 20px; padding: 15px; border-radius: 8px; text-align: center; display: none;"></div>
         </div>
     </div>
     
@@ -1410,132 +1760,316 @@
               yields: {lpg: 0.03, naphtha: 0.28, gasoline: 0.25, kerosene: 0.10, jet: 0.08, diesel: 0.14, vgo: 0.05, residual: 0.07},
               sara: {saturates: 0.62, aromatics: 0.28, resins: 0.08, asphaltenes: 0.02},
               viscosity: 3.2, pourPoint: -15, tan: 0.05, vanadium: 2, nickel: 4,
-              transportCost: 4.50}, // Asia-Pacific to Houston
+              transportCost: 4.50, fobPrice: 66.67}, // Premium light sweet crude
             { name: 'Bonny Light', origin: 'Nigeria', api: 35.4, sulfur: 0.14, type: 'Light Sweet',
               yields: {lpg: 0.02, naphtha: 0.23, gasoline: 0.21, kerosene: 0.08, jet: 0.07, diesel: 0.17, vgo: 0.08, residual: 0.14},
               sara: {saturates: 0.55, aromatics: 0.30, resins: 0.11, asphaltenes: 0.04},
               viscosity: 4.8, pourPoint: -12, tan: 0.08, vanadium: 5, nickel: 8,
-              transportCost: 2.80}, // West Africa to Houston
+              transportCost: 2.80, fobPrice: 64.28}, // African light sweet
             { name: 'WTI', origin: 'USA', api: 39.6, sulfur: 0.24, type: 'Light Sweet',
               yields: {lpg: 0.025, naphtha: 0.25, gasoline: 0.23, kerosene: 0.09, jet: 0.07, diesel: 0.16, vgo: 0.07, residual: 0.105},
               sara: {saturates: 0.58, aromatics: 0.29, resins: 0.10, asphaltenes: 0.03},
               viscosity: 4.0, pourPoint: -18, tan: 0.07, vanadium: 3, nickel: 6,
-              transportCost: 0.75}, // Domestic pipeline/barge
+              transportCost: 0.75, fobPrice: 59.67}, // WTI benchmark
             { name: 'Brent', origin: 'North Sea', api: 38.3, sulfur: 0.37, type: 'Light Sweet',
               yields: {lpg: 0.02, naphtha: 0.24, gasoline: 0.22, kerosene: 0.08, jet: 0.07, diesel: 0.17, vgo: 0.08, residual: 0.12},
               sara: {saturates: 0.56, aromatics: 0.29, resins: 0.11, asphaltenes: 0.04},
               viscosity: 4.3, pourPoint: -16, tan: 0.09, vanadium: 4, nickel: 7,
-              transportCost: 2.60}, // North Sea to Houston
+              transportCost: 2.60, fobPrice: 64.18}, // Brent benchmark
             
             // Light Sour Crudes  
             { name: 'Arab Light', origin: 'Saudi Arabia', api: 33.0, sulfur: 1.77, type: 'Light Sour',
               yields: {lpg: 0.015, naphtha: 0.21, gasoline: 0.19, kerosene: 0.07, jet: 0.07, diesel: 0.17, vgo: 0.10, residual: 0.175},
               sara: {saturates: 0.50, aromatics: 0.31, resins: 0.13, asphaltenes: 0.06},
               viscosity: 5.6, pourPoint: -10, tan: 0.12, vanadium: 8, nickel: 15,
-              transportCost: 3.20}, // Middle East to Houston
+              transportCost: 3.20, fobPrice: 61.34}, // Saudi OSP typically Brent -$2 to -$3
             { name: 'Kuwait Export', origin: 'Kuwait', api: 31.4, sulfur: 2.52, type: 'Light Sour',
               yields: {lpg: 0.015, naphtha: 0.20, gasoline: 0.18, kerosene: 0.06, jet: 0.07, diesel: 0.16, vgo: 0.11, residual: 0.205},
               sara: {saturates: 0.48, aromatics: 0.32, resins: 0.14, asphaltenes: 0.06},
               viscosity: 6.2, pourPoint: -8, tan: 0.15, vanadium: 12, nickel: 18,
-              transportCost: 3.30}, // Middle East to Houston
+              transportCost: 3.30, fobPrice: 64.87}, // Heavier and more sour
             { name: 'Murban', origin: 'UAE', api: 40.5, sulfur: 0.78, type: 'Light Sour',
               yields: {lpg: 0.025, naphtha: 0.25, gasoline: 0.22, kerosene: 0.09, jet: 0.07, diesel: 0.17, vgo: 0.06, residual: 0.095},
               sara: {saturates: 0.54, aromatics: 0.30, resins: 0.12, asphaltenes: 0.04},
               viscosity: 3.8, pourPoint: -14, tan: 0.10, vanadium: 6, nickel: 10,
-              transportCost: 3.40}, // Middle East to Houston
+              transportCost: 3.40, fobPrice: 64.96}, // Premium light sour
             
             // Heavy Sweet Crudes
             { name: 'Forcados', origin: 'Nigeria', api: 29.7, sulfur: 0.22, type: 'Heavy Sweet',
               yields: {lpg: 0.01, naphtha: 0.19, gasoline: 0.17, kerosene: 0.06, jet: 0.06, diesel: 0.16, vgo: 0.12, residual: 0.23},
               sara: {saturates: 0.45, aromatics: 0.32, resins: 0.16, asphaltenes: 0.07},
               viscosity: 8.5, pourPoint: -5, tan: 0.18, vanadium: 15, nickel: 22,
-              transportCost: 2.80}, // West Africa to Houston
+              transportCost: 2.80, fobPrice: 65.18}, // Heavy but sweet
             { name: 'Dalia', origin: 'Angola', api: 23.5, sulfur: 0.48, type: 'Heavy Sweet',
               yields: {lpg: 0.008, naphtha: 0.15, gasoline: 0.14, kerosene: 0.05, jet: 0.05, diesel: 0.15, vgo: 0.15, residual: 0.302},
               sara: {saturates: 0.40, aromatics: 0.33, resins: 0.18, asphaltenes: 0.09},
               viscosity: 15.2, pourPoint: -2, tan: 0.22, vanadium: 25, nickel: 35,
-              transportCost: 2.90}, // West Africa to Houston
+              transportCost: 2.90, fobPrice: 61.13}, // Heavier crude, discount to Brent
             
             // Heavy Sour Crudes
             { name: 'Maya', origin: 'Mexico', api: 21.8, sulfur: 3.30, type: 'Heavy Sour',
               yields: {lpg: 0.007, naphtha: 0.14, gasoline: 0.13, kerosene: 0.04, jet: 0.05, diesel: 0.14, vgo: 0.16, residual: 0.333},
               sara: {saturates: 0.35, aromatics: 0.34, resins: 0.20, asphaltenes: 0.11},
               viscosity: 22.5, pourPoint: 3, tan: 0.35, vanadium: 50, nickel: 65,
-              transportCost: 1.20}, // Mexico to Houston
+              transportCost: 1.20, fobPrice: 54.24}, // Heavy sour discount
             { name: 'Arab Heavy', origin: 'Saudi Arabia', api: 27.7, sulfur: 2.80, type: 'Heavy Sour',
               yields: {lpg: 0.01, naphtha: 0.17, gasoline: 0.15, kerosene: 0.05, jet: 0.06, diesel: 0.15, vgo: 0.13, residual: 0.26},
               sara: {saturates: 0.42, aromatics: 0.33, resins: 0.17, asphaltenes: 0.08},
               viscosity: 12.8, pourPoint: 0, tan: 0.25, vanadium: 30, nickel: 40,
-              transportCost: 3.30}, // Middle East to Houston
+              transportCost: 3.30, fobPrice: 60.39}, // Better than Maya but still heavy/sour
             { name: 'Basrah Heavy', origin: 'Iraq', api: 24.7, sulfur: 3.95, type: 'Heavy Sour',
               yields: {lpg: 0.008, naphtha: 0.16, gasoline: 0.14, kerosene: 0.05, jet: 0.05, diesel: 0.14, vgo: 0.14, residual: 0.302},
               sara: {saturates: 0.38, aromatics: 0.34, resins: 0.19, asphaltenes: 0.09},
               viscosity: 18.5, pourPoint: 5, tan: 0.32, vanadium: 45, nickel: 55,
-              transportCost: 3.50}, // Middle East to Houston
+              transportCost: 3.50, fobPrice: 60.35}, // High sulfur discount
             { name: 'Venezuelan Merey', origin: 'Venezuela', api: 16.0, sulfur: 2.45, type: 'Extra Heavy',
               yields: {lpg: 0.005, naphtha: 0.10, gasoline: 0.10, kerosene: 0.03, jet: 0.04, diesel: 0.12, vgo: 0.18, residual: 0.405},
               sara: {saturates: 0.30, aromatics: 0.35, resins: 0.22, asphaltenes: 0.13},
               viscosity: 35.0, pourPoint: 10, tan: 0.45, vanadium: 85, nickel: 95,
-              transportCost: 1.80}, // Venezuela to Houston
+              transportCost: 1.80, fobPrice: 54.16}, // Extra heavy discount
             
             // Medium Crudes
             { name: 'Es Sider', origin: 'Libya', api: 37.0, sulfur: 0.44, type: 'Light Sweet',
               yields: {lpg: 0.02, naphtha: 0.24, gasoline: 0.21, kerosene: 0.08, jet: 0.07, diesel: 0.17, vgo: 0.08, residual: 0.13},
               sara: {saturates: 0.54, aromatics: 0.30, resins: 0.12, asphaltenes: 0.04},
               viscosity: 4.6, pourPoint: -12, tan: 0.11, vanadium: 7, nickel: 12,
-              transportCost: 2.40}, // Mediterranean to Houston
+              transportCost: 2.40, fobPrice: 63.42}, // North African light sweet
             { name: 'Urals', origin: 'Russia', api: 31.8, sulfur: 1.35, type: 'Medium Sour',
               yields: {lpg: 0.015, naphtha: 0.20, gasoline: 0.19, kerosene: 0.06, jet: 0.07, diesel: 0.16, vgo: 0.10, residual: 0.195},
               sara: {saturates: 0.49, aromatics: 0.31, resins: 0.14, asphaltenes: 0.06},
               viscosity: 6.8, pourPoint: -6, tan: 0.16, vanadium: 18, nickel: 28,
-              transportCost: 3.60}, // Russia to Houston
+              transportCost: 3.60, fobPrice: 46.49}, // Russian discount (sanctions/risk)
             { name: 'Dubai', origin: 'UAE', api: 31.0, sulfur: 2.00, type: 'Medium Sour',
               yields: {lpg: 0.015, naphtha: 0.20, gasoline: 0.18, kerosene: 0.06, jet: 0.07, diesel: 0.16, vgo: 0.11, residual: 0.205},
               sara: {saturates: 0.47, aromatics: 0.32, resins: 0.15, asphaltenes: 0.06},
               viscosity: 7.2, pourPoint: -4, tan: 0.14, vanadium: 20, nickel: 30,
-              transportCost: 3.40} // Middle East to Houston
+              transportCost: 3.40, fobPrice: 63.76}, // Dubai benchmark
+            
+            // North American Crudes
+            { name: 'WCS', origin: 'Canada', api: 20.5, sulfur: 3.50, type: 'Heavy Sour',
+              yields: {lpg: 0.006, naphtha: 0.13, gasoline: 0.12, kerosene: 0.04, jet: 0.04, diesel: 0.13, vgo: 0.17, residual: 0.354},
+              sara: {saturates: 0.33, aromatics: 0.35, resins: 0.21, asphaltenes: 0.11},
+              viscosity: 28.0, pourPoint: 5, tan: 0.40, vanadium: 60, nickel: 75,
+              transportCost: 1.50, fobPrice: 53.30}, // Canadian heavy discount
+            { name: 'Eagle Ford', origin: 'USA', api: 47.0, sulfur: 0.10, type: 'Ultra Light',
+              yields: {lpg: 0.04, naphtha: 0.30, gasoline: 0.26, kerosene: 0.10, jet: 0.08, diesel: 0.12, vgo: 0.04, residual: 0.06},
+              sara: {saturates: 0.65, aromatics: 0.27, resins: 0.06, asphaltenes: 0.02},
+              viscosity: 2.8, pourPoint: -20, tan: 0.04, vanadium: 1, nickel: 3,
+              transportCost: 0.50, fobPrice: 58.96} // Shale light discount to WTI
         ];
         
         // Current market prices for all products
         const marketPrices = {
             // Crudes
-            brent: 76.22,
-            wti: 73.56,
-            dubai: 75.89,
+            brent: 64.18,
+            wti: 59.67,
+            dubai: 63.76,
+            urals: 46.49,
             
             // Light Products
-            lpg: 45.80,
-            lightNaphtha: 78.50,
-            naphtha: 82.15,
-            reformate: 95.30,
+            lpg: 34.37,
+            propane: 30.50,
+            butane: 38.24,
+            lightNaphtha: 53.84,
+            naphtha: 60.57,
+            reformate: 103.94,
             
             // Gasoline
-            gasoline87: 90.30,
-            gasoline92: 92.85,
-            gasoline95: 94.50,
-            alkylate: 105.50,
+            gasoline87: 75.80,  // Regular gasoline
+            gasoline92: 83.67,  // Premium gasoline  
+            gasoline95: 83.67,  // Using premium price
+            alkylate: 85.35,
+            mtbe: 98.39,
             
             // Middle Distillates
-            kerosene: 93.20,
-            jet: 95.50,
-            ulsd: 98.70,
-            diesel50: 96.40,
-            heatingOil: 94.85,
-            marineGasoil: 88.40,
+            kerosene: 93.83,    // Kerosene ULS
+            jet: 89.21,         // Jet 54
+            ulsd: 93.03,        // ULSD 10 ppm
+            diesel50: 93.03,    // Using ULSD price
+            heatingOil: 86.81,  // ULS heating oil
+            marineGasoil: 91.44,
             
             // Heavy Products
-            vgo: 68.90,
-            lco: 72.30,
-            hco: 58.20,
-            cgo: 65.50,
-            hsfo: 55.40,
-            vlsfo: 62.80,
-            vacuumResidue: 48.50,
-            coke: 25.50,
-            sulfur: 2.50 // $/bbl equivalent
+            vgo: 68.90,         // Keeping original as not provided
+            lco: 82.59,         // LCO
+            hco: 56.10,         // Slurry oil
+            cgo: 65.50,         // Keeping original as not provided
+            hsfo: 53.42,        // HSFO 3.5%
+            vlsfo: 65.30,       // VLSFO 0.5%
+            lsResid: 63.33,     // LS resid 1%
+            vacuumResidue: 48.50, // Keeping original
+            coke: 25.50,        // Keeping original as not provided
+            sulfur: 2.50        // Keeping original
         };
         
         let currentConfig = 'simple';
+        
+        // Track CIF Houston mode (true = CIF Houston, false = FOB Origin)
+        let useCIFHouston = true;
+        
+        // Toggle CIF Houston mode
+        function toggleCIFMode() {
+            const toggle = document.getElementById('cifToggle');
+            const priceHeader = document.getElementById('priceColumnHeader');
+            
+            useCIFHouston = toggle.checked;
+            
+            // Update column header
+            if (priceHeader) {
+                priceHeader.textContent = useCIFHouston ? 'CIF Houston' : 'FOB Origin';
+            }
+            
+            // Refresh the current view with new mode
+            updateHotCrudesWithYields(currentConfig);
+        }
+        
+        // Update all price displays in Live Market Conditions section
+        function updatePriceDisplays() {
+            // Update crude displays
+            if (document.getElementById('display-brent')) {
+                document.getElementById('display-brent').textContent = `$${marketPrices.brent.toFixed(2)}`;
+            }
+            if (document.getElementById('display-wti')) {
+                document.getElementById('display-wti').textContent = `$${marketPrices.wti.toFixed(2)}`;
+            }
+            if (document.getElementById('display-dubai')) {
+                document.getElementById('display-dubai').textContent = `$${marketPrices.dubai.toFixed(2)}`;
+            }
+            if (document.getElementById('display-urals') && marketPrices.urals) {
+                document.getElementById('display-urals').textContent = `$${marketPrices.urals.toFixed(2)}`;
+            }
+            
+            // Update light products
+            if (document.getElementById('display-lpg')) {
+                document.getElementById('display-lpg').textContent = `$${marketPrices.lpg.toFixed(2)}`;
+            }
+            if (document.getElementById('display-lightNaphtha')) {
+                document.getElementById('display-lightNaphtha').textContent = `$${marketPrices.lightNaphtha.toFixed(2)}`;
+            }
+            if (document.getElementById('display-naphtha')) {
+                document.getElementById('display-naphtha').textContent = `$${marketPrices.naphtha.toFixed(2)}`;
+            }
+            if (document.getElementById('display-reformate')) {
+                document.getElementById('display-reformate').textContent = `$${marketPrices.reformate.toFixed(2)}`;
+            }
+            
+            // Update gasoline products
+            if (document.getElementById('display-gasoline87')) {
+                document.getElementById('display-gasoline87').textContent = `$${marketPrices.gasoline87.toFixed(2)}`;
+            }
+            if (document.getElementById('display-gasoline92')) {
+                document.getElementById('display-gasoline92').textContent = `$${marketPrices.gasoline92.toFixed(2)}`;
+            }
+            if (document.getElementById('display-gasoline95')) {
+                document.getElementById('display-gasoline95').textContent = `$${marketPrices.gasoline95.toFixed(2)}`;
+            }
+            if (document.getElementById('display-alkylate')) {
+                document.getElementById('display-alkylate').textContent = `$${marketPrices.alkylate.toFixed(2)}`;
+            }
+            if (document.getElementById('display-mtbe') && marketPrices.mtbe) {
+                document.getElementById('display-mtbe').textContent = `$${marketPrices.mtbe.toFixed(2)}`;
+            }
+            
+            // Update middle distillates
+            if (document.getElementById('display-kerosene')) {
+                document.getElementById('display-kerosene').textContent = `$${marketPrices.kerosene.toFixed(2)}`;
+            }
+            if (document.getElementById('display-jet')) {
+                document.getElementById('display-jet').textContent = `$${marketPrices.jet.toFixed(2)}`;
+            }
+            if (document.getElementById('display-ulsd')) {
+                document.getElementById('display-ulsd').textContent = `$${marketPrices.ulsd.toFixed(2)}`;
+            }
+            if (document.getElementById('display-diesel50')) {
+                document.getElementById('display-diesel50').textContent = `$${marketPrices.diesel50.toFixed(2)}`;
+            }
+            if (document.getElementById('display-heatingOil')) {
+                document.getElementById('display-heatingOil').textContent = `$${marketPrices.heatingOil.toFixed(2)}`;
+            }
+            if (document.getElementById('display-marineGasoil')) {
+                document.getElementById('display-marineGasoil').textContent = `$${marketPrices.marineGasoil.toFixed(2)}`;
+            }
+            
+            // Update heavy products
+            if (document.getElementById('display-vgo')) {
+                document.getElementById('display-vgo').textContent = `$${marketPrices.vgo.toFixed(2)}`;
+            }
+            if (document.getElementById('display-lco')) {
+                document.getElementById('display-lco').textContent = `$${marketPrices.lco.toFixed(2)}`;
+            }
+            if (document.getElementById('display-hco')) {
+                document.getElementById('display-hco').textContent = `$${marketPrices.hco.toFixed(2)}`;
+            }
+            if (document.getElementById('display-cgo')) {
+                document.getElementById('display-cgo').textContent = `$${marketPrices.cgo.toFixed(2)}`;
+            }
+            if (document.getElementById('display-slurry')) {
+                document.getElementById('display-slurry').textContent = `$${marketPrices.hco.toFixed(2)}`;
+            }
+            if (document.getElementById('display-hsfo')) {
+                document.getElementById('display-hsfo').textContent = `$${marketPrices.hsfo.toFixed(2)}`;
+            }
+            if (document.getElementById('display-vlsfo')) {
+                document.getElementById('display-vlsfo').textContent = `$${marketPrices.vlsfo.toFixed(2)}`;
+            }
+        }
+        
+        // Initialize market trends with calculated values
+        function initializeMarketTrends() {
+            console.log('Initializing market trends with new prices...');
+            
+            // Calculate current crack spreads based on market prices
+            const crack321 = ((2 * marketPrices.gasoline87 + marketPrices.ulsd) / 3) - marketPrices.wti;
+            const dieselCrack = marketPrices.ulsd - marketPrices.brent;
+            const gasCrack = marketPrices.gasoline87 - marketPrices.brent;
+            
+            // For Maya and WCS, use default values if not in marketPrices
+            const maya = 54.24; // Default Maya price
+            const wcs = 53.30;  // Default WCS price
+            const heavyLight = marketPrices.wti - maya;
+            const wcsDiscount = marketPrices.wti - wcs;
+            const brentDubai = marketPrices.brent - marketPrices.dubai;
+            
+            console.log('Calculated values:', {
+                crack321: crack321.toFixed(2),
+                dieselCrack: dieselCrack.toFixed(2),
+                gasCrack: gasCrack.toFixed(2),
+                heavyLight: heavyLight.toFixed(2),
+                brentDubai: brentDubai.toFixed(2),
+                wcsDiscount: wcsDiscount.toFixed(2)
+            });
+            
+            // Update display with initial calculated values
+            if (document.getElementById('market-crack321')) {
+                document.getElementById('market-crack321').textContent = `$${crack321.toFixed(2)}/bbl`;
+                document.getElementById('market-crack321').style.color = crack321 > 20 ? '#28a745' : '#dc3545';
+            }
+            if (document.getElementById('market-dieselcrack')) {
+                document.getElementById('market-dieselcrack').textContent = `$${dieselCrack.toFixed(2)}/bbl`;
+                document.getElementById('market-dieselcrack').style.color = dieselCrack > 25 ? '#28a745' : '#dc3545';
+            }
+            if (document.getElementById('market-gascrack')) {
+                document.getElementById('market-gascrack').textContent = `$${gasCrack.toFixed(2)}/bbl`;
+                document.getElementById('market-gascrack').style.color = gasCrack > 12 ? '#28a745' : '#dc3545';
+            }
+            if (document.getElementById('market-heavylight')) {
+                document.getElementById('market-heavylight').textContent = `$${heavyLight.toFixed(2)}/bbl`;
+                document.getElementById('market-heavylight').style.color = heavyLight > 10 ? '#28a745' : '#dc3545';
+            }
+            if (document.getElementById('market-brentdubai')) {
+                document.getElementById('market-brentdubai').textContent = `$${brentDubai.toFixed(2)}/bbl`;
+                document.getElementById('market-brentdubai').style.color = Math.abs(brentDubai) < 2 ? '#ffc107' : '#28a745';
+            }
+            if (document.getElementById('market-wcsdiscount')) {
+                document.getElementById('market-wcsdiscount').textContent = `$${wcsDiscount.toFixed(2)}/bbl`;
+                document.getElementById('market-wcsdiscount').style.color = wcsDiscount > 12 ? '#28a745' : '#dc3545';
+            }
+            
+            // Set initial timestamp
+            if (document.getElementById('price-timestamp')) {
+                document.getElementById('price-timestamp').textContent = `Last updated: ${new Date().toLocaleString()}`;
+            }
+        }
         
         // Custom Crudes array
         let customCrudes = [];
@@ -1543,7 +2077,7 @@
         // Get current assumptions - defined early as it's used by multiple functions
         function getAssumptions() {
             return {
-                baseCrudeCost: (document.getElementById('baseCrudeCost') && document.getElementById('baseCrudeCost').value) || 75,
+                baseCrudeCost: (document.getElementById('baseCrudeCost') && document.getElementById('baseCrudeCost').value) || 60,
                 operatingCost: (document.getElementById('operatingCost') && document.getElementById('operatingCost').value) || 5,
                 sulfurPenalty: (document.getElementById('sulfurPenalty') && document.getElementById('sulfurPenalty').value) || 2,
                 apiBonus: (document.getElementById('apiBonus') && document.getElementById('apiBonus').value) || 0.5,
@@ -1625,10 +2159,11 @@
                 }
             }
             
-            // Calculate margin with CIF Houston delivery
+            // Calculate margin with CIF Houston delivery or FOB origin based on toggle
             const baseAssumptions = getAssumptions();
-            const crudeFOBCost = parseFloat(baseAssumptions.baseCrudeCost) || 75;
-            const transportCost = crude.transportCost || 0;
+            // Use crude's individual FOB price if available, otherwise fall back to baseCrudeCost
+            const crudeFOBCost = crude.fobPrice || parseFloat(baseAssumptions.baseCrudeCost) || 60;
+            const transportCost = useCIFHouston ? (crude.transportCost || 0) : 0;
             const operatingCost = parseFloat(baseAssumptions.operatingCost) || 5;
             const sulfurPenalty = (parseFloat(baseAssumptions.sulfurPenalty) || 2) * crude.sulfur;
             const apiBonus = crude.api > 30 ? (parseFloat(baseAssumptions.apiBonus) || 0.5) * (crude.api - 30) : 0;
@@ -1683,15 +2218,17 @@
                 }
                 
                 const baseAssumptions = getAssumptions();
-                const crudeFOBCost = parseFloat(baseAssumptions.baseCrudeCost) || 75;
+                // Use crude's individual FOB price if available
+                const crudeFOBCost = crude.fobPrice || parseFloat(baseAssumptions.baseCrudeCost) || 60;
                 const cifHouston = crudeFOBCost + crude.transportCost;
+                const displayPrice = useCIFHouston ? cifHouston : crudeFOBCost;
                 
                 row.innerHTML = `
                     <td><span class="${badgeClass}">#${index + 1}</span></td>
                     <td><strong>${crude.name}</strong></td>
                     <td>${crude.origin}</td>
                     <td>${crude.api.toFixed(1)}°/${crude.sulfur.toFixed(2)}%</td>
-                    <td>$${cifHouston.toFixed(2)}</td>
+                    <td>$${displayPrice.toFixed(2)}</td>
                     <td style="font-size: 0.85em;">${keyYields}</td>
                     <td>$${crude.revenue.toFixed(2)}</td>
                     <td><strong style="color: ${crude.margin > 0 ? '#27ae60' : '#e74c3c'}">$${crude.margin.toFixed(2)}</strong></td>
@@ -1952,6 +2489,7 @@
             document.getElementById('blendingPage').style.display = 'none';
             document.getElementById('customCrudePage').style.display = 'none';
             document.getElementById('assumptionsPage').style.display = 'none';
+            document.getElementById('pricingPage').style.display = 'none';
         }
         
         function showLPModel() {
@@ -1960,6 +2498,7 @@
             document.getElementById('blendingPage').style.display = 'none';
             document.getElementById('customCrudePage').style.display = 'none';
             document.getElementById('assumptionsPage').style.display = 'none';
+            document.getElementById('pricingPage').style.display = 'none';
             populateLPDropdowns();
         }
         
@@ -1969,6 +2508,7 @@
             document.getElementById('blendingPage').style.display = 'block';
             document.getElementById('customCrudePage').style.display = 'none';
             document.getElementById('assumptionsPage').style.display = 'none';
+            document.getElementById('pricingPage').style.display = 'none';
             populateBlendingDropdowns();
         }
         
@@ -1978,6 +2518,7 @@
             document.getElementById('blendingPage').style.display = 'none';
             document.getElementById('customCrudePage').style.display = 'block';
             document.getElementById('assumptionsPage').style.display = 'none';
+            document.getElementById('pricingPage').style.display = 'none';
         }
         
         function showAssumptions() {
@@ -1985,6 +2526,7 @@
             document.getElementById('lpModelPage').style.display = 'none';
             document.getElementById('blendingPage').style.display = 'none';
             document.getElementById('customCrudePage').style.display = 'none';
+            document.getElementById('pricingPage').style.display = 'none';
             document.getElementById('assumptionsPage').style.display = 'block';
         }
         
@@ -2240,7 +2782,7 @@
             
             const crude = crudeDatabase.find(c => c.name === crudeName);
             const baseAssumptions = getAssumptions();
-            const crudeFOBCost = parseFloat(baseAssumptions.baseCrudeCost) || 75;
+            const crudeFOBCost = crude.fobPrice || parseFloat(baseAssumptions.baseCrudeCost) || 60;
             const cifHoustonCost = crudeFOBCost + crude.transportCost;
             
             document.getElementById(infoId).innerHTML = `
@@ -2257,326 +2799,1195 @@
         
         // Calculate blend properties
         function calculateBlend() {
-            const crude1Name = document.getElementById('blendCrude1').value;
-            const crude2Name = document.getElementById('blendCrude2').value;
-            const percent1 = parseFloat(document.getElementById('blendPercent1').value) / 100;
-            const percent2 = parseFloat(document.getElementById('blendPercent2').value) / 100;
-            const volumeElement = document.getElementById('blendVolume');
-            const volume = volumeElement ? parseFloat(volumeElement.value) : 50000;
-            const optimizationTarget = document.getElementById('optimizationTarget').value;
-            const refineryConfig = document.getElementById('blendRefineryConfig').value;
-            
-            if (!crude1Name || !crude2Name) {
-                alert('Please select both crudes');
-                return;
+            try {
+                console.log('calculateBlend called');
+                const crude1Name = document.getElementById('blendCrude1').value;
+                const crude2Name = document.getElementById('blendCrude2').value;
+                const percent1Input = document.getElementById('blendPercent1');
+                const percent2Input = document.getElementById('blendPercent2');
+                
+                // Handle missing slider elements
+                const percent1 = percent1Input ? parseFloat(percent1Input.value) / 100 : 0.5;
+                const percent2 = percent2Input ? parseFloat(percent2Input.value) / 100 : 0.5;
+                const volumeElement = document.getElementById('blendVolume');
+                const volume = volumeElement ? parseFloat(volumeElement.value) : 50000;
+                const optimizationTarget = document.getElementById('optimizationTarget') ? document.getElementById('optimizationTarget').value : 'balanced';
+                const refineryConfig = document.getElementById('blendRefineryConfig') ? document.getElementById('blendRefineryConfig').value : 'simple';
+                
+                console.log('Inputs:', {crude1Name, crude2Name, percent1, percent2, volume});
+                
+                if (!crude1Name || !crude2Name) {
+                    alert('Please select both crudes');
+                    return;
+                }
+                
+                const crude1 = crudeDatabase.find(c => c.name === crude1Name);
+                const crude2 = crudeDatabase.find(c => c.name === crude2Name);
+                
+                if (!crude1 || !crude2) {
+                    alert('Error: Could not find selected crudes in database');
+                    return;
+                }
+                
+                // Calculate blend properties
+                const blendAPI = crude1.api * percent1 + crude2.api * percent2;
+                const blendSulfur = crude1.sulfur * percent1 + crude2.sulfur * percent2;
+                const blendTransportCost = (crude1.transportCost || 0) * percent1 + (crude2.transportCost || 0) * percent2;
+                const crude1FOB = crude1.fobPrice || 60;
+                const crude2FOB = crude2.fobPrice || 60;
+                const blendFOBCost = crude1FOB * percent1 + crude2FOB * percent2;
+                
+                // Calculate SARA fractions for compatibility
+                const crude1SARA = crude1.sara || {saturates: 0.5, aromatics: 0.3, resins: 0.15, asphaltenes: 0.05};
+                const crude2SARA = crude2.sara || {saturates: 0.5, aromatics: 0.3, resins: 0.15, asphaltenes: 0.05};
+                
+                const blendSARA = {
+                    saturates: crude1SARA.saturates * percent1 + crude2SARA.saturates * percent2,
+                    aromatics: crude1SARA.aromatics * percent1 + crude2SARA.aromatics * percent2,
+                    resins: crude1SARA.resins * percent1 + crude2SARA.resins * percent2,
+                    asphaltenes: crude1SARA.asphaltenes * percent1 + crude2SARA.asphaltenes * percent2
+                };
+                
+                // COMPREHENSIVE COMPATIBILITY ASSESSMENT
+                // Multiple factors contribute to crude oil compatibility
+                
+                // 1. API Gravity Difference Factor - Much stricter thresholds
+                const apiDiff = Math.abs(crude1.api - crude2.api);
+                let apiCompatScore = 0;
+                if (apiDiff < 3) apiCompatScore = 1.0;        // Very similar crudes only
+                else if (apiDiff < 5) apiCompatScore = 0.85;   
+                else if (apiDiff < 8) apiCompatScore = 0.70;
+                else if (apiDiff < 12) apiCompatScore = 0.55;  
+                else if (apiDiff < 16) apiCompatScore = 0.40;
+                else if (apiDiff < 20) apiCompatScore = 0.25;
+                else if (apiDiff < 25) apiCompatScore = 0.10;
+                else apiCompatScore = 0.0;  // >25 API difference is terrible
+                
+                // 2. Colloidal Instability Index (CII) for each crude
+                // CII = (Saturates + Asphaltenes) / (Aromatics + Resins)
+                const crude1CII = (crude1SARA.saturates + crude1SARA.asphaltenes) / 
+                                  (crude1SARA.aromatics + crude1SARA.resins);
+                const crude2CII = (crude2SARA.saturates + crude2SARA.asphaltenes) / 
+                                  (crude2SARA.aromatics + crude2SARA.resins);
+                const blendCII = (blendSARA.saturates + blendSARA.asphaltenes) / 
+                                (blendSARA.aromatics + blendSARA.resins);
+                
+                // Delta CII - larger difference means poorer compatibility - STRICTER
+                const deltaCII = Math.abs(crude1CII - crude2CII);
+                let ciiCompatScore = 0;
+                if (deltaCII < 0.1) ciiCompatScore = 1.0;      // Only very similar CII values
+                else if (deltaCII < 0.2) ciiCompatScore = 0.85;
+                else if (deltaCII < 0.3) ciiCompatScore = 0.70;
+                else if (deltaCII < 0.4) ciiCompatScore = 0.55;
+                else if (deltaCII < 0.5) ciiCompatScore = 0.40;
+                else if (deltaCII < 0.7) ciiCompatScore = 0.25;
+                else if (deltaCII < 0.9) ciiCompatScore = 0.10;
+                else ciiCompatScore = 0.0;  // >0.9 CII difference is severe
+                
+                // 3. Asphaltene Stability - check if blend CII exceeds critical value
+                // Lower threshold for stricter assessment
+                const criticalCII = 0.7; // Lowered from 0.9 - industry best practice
+                let stabilityScore = 1.0;
+                if (blendCII > criticalCII) {
+                    // Steep penalty for unstable blends
+                    stabilityScore = Math.max(0, 1 - (blendCII - criticalCII) * 3);
+                }
+                // Additional penalty for very high CII
+                if (blendCII > 1.0) {
+                    stabilityScore = Math.max(0, stabilityScore - 0.3);
+                }
+                if (blendCII > 1.3) {
+                    stabilityScore = 0;  // Completely unstable
+                }
+                
+                // 4. Viscosity Ratio Factor - Much stricter for heavy/light blends
+                const crude1Visc = crude1.viscosity || 10;
+                const crude2Visc = crude2.viscosity || 10;
+                const viscRatio = Math.max(crude1Visc, crude2Visc) / Math.min(crude1Visc, crude2Visc);
+                let viscCompatScore = 0;
+                if (viscRatio < 1.5) viscCompatScore = 1.0;     // Very similar viscosities only
+                else if (viscRatio < 2.0) viscCompatScore = 0.85;
+                else if (viscRatio < 3.0) viscCompatScore = 0.70;
+                else if (viscRatio < 5.0) viscCompatScore = 0.55;
+                else if (viscRatio < 8.0) viscCompatScore = 0.40;
+                else if (viscRatio < 15) viscCompatScore = 0.25;
+                else if (viscRatio < 25) viscCompatScore = 0.10;
+                else viscCompatScore = 0.0;  // >25x viscosity difference is terrible
+                
+                // 5. Sulfur Content Difference - Stricter thresholds
+                const sulfurDiff = Math.abs(crude1.sulfur - crude2.sulfur);
+                let sulfurCompatScore = 0;
+                if (sulfurDiff < 0.3) sulfurCompatScore = 1.0;
+                else if (sulfurDiff < 0.5) sulfurCompatScore = 0.85;
+                else if (sulfurDiff < 0.8) sulfurCompatScore = 0.70;
+                else if (sulfurDiff < 1.2) sulfurCompatScore = 0.55;
+                else if (sulfurDiff < 1.8) sulfurCompatScore = 0.40;
+                else if (sulfurDiff < 2.5) sulfurCompatScore = 0.25;
+                else sulfurCompatScore = 0.1;
+                
+                // 6. Pour Point Difference - Stricter for wax issues
+                const pourDiff = Math.abs((crude1.pourPoint || 0) - (crude2.pourPoint || 0));
+                let pourCompatScore = 0;
+                if (pourDiff < 5) pourCompatScore = 1.0;
+                else if (pourDiff < 10) pourCompatScore = 0.85;
+                else if (pourDiff < 15) pourCompatScore = 0.70;
+                else if (pourDiff < 20) pourCompatScore = 0.55;
+                else if (pourDiff < 30) pourCompatScore = 0.40;
+                else if (pourDiff < 40) pourCompatScore = 0.25;
+                else pourCompatScore = 0.1;
+                
+                // 7. SARA Balance - Peptizing ratio (stricter thresholds)
+                // P-ratio = (Aromatics + Resins) / Asphaltenes
+                const crude1PRatio = (crude1SARA.aromatics + crude1SARA.resins) / Math.max(0.001, crude1SARA.asphaltenes);
+                const crude2PRatio = (crude2SARA.aromatics + crude2SARA.resins) / Math.max(0.001, crude2SARA.asphaltenes);
+                const pRatioDiff = Math.abs(Math.log(crude1PRatio) - Math.log(crude2PRatio));
+                let pRatioScore = 0;
+                if (pRatioDiff < 0.2) pRatioScore = 1.0;
+                else if (pRatioDiff < 0.4) pRatioScore = 0.85;
+                else if (pRatioDiff < 0.6) pRatioScore = 0.70;
+                else if (pRatioDiff < 0.9) pRatioScore = 0.55;
+                else if (pRatioDiff < 1.3) pRatioScore = 0.40;
+                else if (pRatioDiff < 1.8) pRatioScore = 0.25;
+                else pRatioScore = 0.1;
+                
+                // Calculate Weighted Overall Compatibility Score
+                // Adjusted weights to reflect real-world importance
+                const weights = {
+                    api: 0.15,       // API difference is important but not primary
+                    cii: 0.30,       // CII is critical for stability
+                    stability: 0.25, // Blend stability is crucial
+                    viscosity: 0.10, // Viscosity mismatch causes processing issues
+                    sulfur: 0.05,    // Less critical for compatibility
+                    pour: 0.05,      // Pour point mainly affects cold flow
+                    pRatio: 0.10     // P-ratio affects asphaltene stability
+                };
+                
+                const overallScore = 
+                    apiCompatScore * weights.api +
+                    ciiCompatScore * weights.cii +
+                    stabilityScore * weights.stability +
+                    viscCompatScore * weights.viscosity +
+                    sulfurCompatScore * weights.sulfur +
+                    pourCompatScore * weights.pour +
+                    pRatioScore * weights.pRatio;
+                
+                // Apply penalties for extreme mismatches
+                let finalScore = overallScore;
+                
+                // Calculate differences for penalty assessment
+                const asphalteneDiff = Math.abs(crude1SARA.asphaltenes - crude2SARA.asphaltenes);
+                const saturatesDiff = Math.abs(crude1SARA.saturates - crude2SARA.saturates);
+                
+                // Heavy penalty for extreme API differences (light/heavy mix)
+                if (apiDiff > 20) {
+                    finalScore *= 0.7;  // 30% penalty
+                }
+                if (apiDiff > 30) {
+                    finalScore *= 0.5;  // Additional 50% penalty
+                }
+                
+                // Heavy penalty for extreme viscosity ratios
+                if (viscRatio > 20) {
+                    finalScore *= 0.7;  // 30% penalty
+                }
+                if (viscRatio > 40) {
+                    finalScore *= 0.5;  // Additional 50% penalty
+                }
+                
+                // Penalty for high asphaltene content mismatch
+                if (asphalteneDiff > 5) {
+                    finalScore *= 0.85;  // 15% penalty
+                }
+                if (asphalteneDiff > 8) {
+                    finalScore *= 0.7;   // Additional 30% penalty
+                }
+                
+                // Penalty for saturates mismatch (affects stability)
+                if (saturatesDiff > 20) {
+                    finalScore *= 0.85;  // 15% penalty
+                }
+                if (saturatesDiff > 30) {
+                    finalScore *= 0.7;   // Additional 30% penalty
+                }
+                
+                // Use the penalized final score for status determination
+                const scoreToUse = finalScore;
+                
+                // Create detailed compatibility report
+                const compatFactors = {
+                    apiDiff: { value: apiDiff.toFixed(1), score: apiCompatScore },
+                    deltaCII: { value: deltaCII.toFixed(3), score: ciiCompatScore },
+                    blendCII: { value: blendCII.toFixed(3), score: stabilityScore },
+                    viscRatio: { value: viscRatio.toFixed(1), score: viscCompatScore },
+                    sulfurDiff: { value: sulfurDiff.toFixed(2), score: sulfurCompatScore },
+                    pourDiff: { value: pourDiff.toFixed(0), score: pourCompatScore },
+                    pRatioDiff: { value: pRatioDiff.toFixed(2), score: pRatioScore },
+                    overallScore: { value: (overallScore * 100).toFixed(0) + '%', score: overallScore },
+                    finalScore: { value: (scoreToUse * 100).toFixed(0) + '%', score: scoreToUse }
+                };
+                
+                // Determine compatibility status and recommendations based on comprehensive scoring
+                let compatibilityStatus, compatibilityColor, compatibilityDetails, recommendations;
+                
+                // Also check for critical failure conditions
+                const hasCriticalIssue = 
+                    blendCII > 1.2 ||  // Severe instability
+                    apiDiff > 30 ||    // Extreme gravity difference
+                    viscRatio > 50 ||  // Extreme viscosity mismatch
+                    deltaCII > 1.5;    // Severe CII mismatch
+                
+                if (hasCriticalIssue) {
+                    compatibilityStatus = "POOR";
+                    compatibilityColor = "#d9534f";
+                    compatibilityDetails = `SEVERE COMPATIBILITY ISSUES DETECTED:
+                        API Diff: ${apiDiff.toFixed(1)}° | Visc Ratio: ${viscRatio.toFixed(1)}:1 | 
+                        Blend CII: ${blendCII.toFixed(2)} | Delta CII: ${deltaCII.toFixed(2)}`;
+                    recommendations = `
+                        <div style="color: #d9534f; font-weight: bold;">⚠️ NOT RECOMMENDED FOR BLENDING</div>
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            <li>These crudes have fundamentally incompatible characteristics</li>
+                            <li>High risk of asphaltene precipitation and sludge formation</li>
+                            <li>If blending is absolutely necessary:
+                                <ul>
+                                    <li>Add 15-20% compatibility improver (aromatic flux/LCO)</li>
+                                    <li>Maintain temperature 15-20°F above normal</li>
+                                    <li>Use inline blending with immediate processing</li>
+                                    <li>Install additional filtration capacity</li>
+                                    <li>Prepare for increased fouling in heat exchangers</li>
+                                    <li>Have contingency plan for blend segregation</li>
+                                </ul>
+                            </li>
+                        </ul>`;
+                } else if (scoreToUse >= 0.85) {
+                    compatibilityStatus = "EXCELLENT";
+                    compatibilityColor = "#28a745";
+                    compatibilityDetails = `Outstanding compatibility across all parameters. Score: ${(scoreToUse * 100).toFixed(0)}%`;
+                    recommendations = "No special precautions needed. This is an ideal blend combination.";
+                } else if (scoreToUse >= 0.70) {
+                    compatibilityStatus = "VERY GOOD";
+                    compatibilityColor = "#5cb85c";
+                    compatibilityDetails = `Strong compatibility with minimal concerns. Score: ${(scoreToUse * 100).toFixed(0)}%`;
+                    recommendations = "Standard blending procedures are sufficient. Monitor initial batch for verification.";
+                } else if (scoreToUse >= 0.55) {
+                    compatibilityStatus = "GOOD";
+                    compatibilityColor = "#f0ad4e";
+                    compatibilityDetails = `Acceptable compatibility but requires some attention. Score: ${(scoreToUse * 100).toFixed(0)}%`;
+                    recommendations = `
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            <li>Consider adding 5-10% aromatic cutter stock for stability</li>
+                            <li>Blend at 5-10°F above normal temperature</li>
+                            <li>Ensure thorough mixing and minimize storage time</li>
+                            <li>Test blend stability before full-scale processing</li>
+                        </ul>`;
+                } else if (scoreToUse >= 0.40) {
+                    compatibilityStatus = "MARGINAL";
+                    compatibilityColor = "#ff9800";
+                    compatibilityDetails = `Significant compatibility concerns detected. Score: ${(scoreToUse * 100).toFixed(0)}%
+                        Key Issues: API Diff ${apiDiff.toFixed(1)}° | Visc Ratio ${viscRatio.toFixed(1)}:1 | CII Δ ${deltaCII.toFixed(2)}`;
+                    recommendations = `
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            <li><strong>Add compatibility improver:</strong> 10-15% aromatic flux or light cycle oil</li>
+                            <li><strong>Temperature control:</strong> Maintain blend temperature 10-15°F above normal</li>
+                            <li><strong>Minimize residence time:</strong> Process blend quickly to avoid separation</li>
+                            <li><strong>Consider alternative:</strong> Find a more compatible crude pair if possible</li>
+                            <li><strong>Lab testing required:</strong> Perform spot test before full-scale blending</li>
+                        </ul>`;
+                } else {
+                    compatibilityStatus = "POOR";
+                    compatibilityColor = "#dc3545";
+                    compatibilityDetails = `Very poor compatibility detected. Score: ${(scoreToUse * 100).toFixed(0)}%
+                        Critical Parameters: API Diff ${apiDiff.toFixed(1)}° | Visc Ratio ${viscRatio.toFixed(1)}:1 | 
+                        Blend CII ${blendCII.toFixed(2)} | CII Δ ${deltaCII.toFixed(2)}`;
+                    recommendations = `
+                        <ul style="margin: 5px 0; padding-left: 20px;">
+                            <li><strong>NOT RECOMMENDED:</strong> Consider alternative crude combinations</li>
+                            <li><strong>If blending is necessary:</strong></li>
+                            <li style="margin-left: 20px;">• Add 15-20% compatibility improver (aromatic flux/LCO)</li>
+                            <li style="margin-left: 20px;">• Maintain elevated temperature throughout (15-20°F higher)</li>
+                            <li style="margin-left: 20px;">• Use inline blending with immediate processing</li>
+                            <li style="margin-left: 20px;">• Install filtration to catch precipitates</li>
+                            <li style="margin-left: 20px;">• Prepare for potential fouling in heat exchangers</li>
+                            <li><strong>Risk mitigation:</strong> Have contingency plan for blend segregation</li>
+                        </ul>`;
+                }
+                
+                // Calculate blend viscosity (simplified)
+                // crude1Visc and crude2Visc already defined above
+                const blendViscosity = Math.exp(Math.log(crude1Visc) * percent1 + Math.log(crude2Visc) * percent2);
+                
+                // Calculate blend pour point (weighted average approximation)
+                const crude1Pour = crude1.pourPoint || 0;
+                const crude2Pour = crude2.pourPoint || 0;
+                const blendPourPoint = crude1Pour * percent1 + crude2Pour * percent2;
+                
+                // Calculate blend TAN
+                const crude1TAN = crude1.tan || 0.1;
+                const crude2TAN = crude2.tan || 0.1;
+                const blendTAN = crude1TAN * percent1 + crude2TAN * percent2;
+                
+                // Calculate metals
+                const blendVanadium = (crude1.vanadium || 10) * percent1 + (crude2.vanadium || 10) * percent2;
+                const blendNickel = (crude1.nickel || 10) * percent1 + (crude2.nickel || 10) * percent2;
+                
+                // Calculate base blend yields
+                const baseBlendYields = {};
+                Object.keys(crude1.yields).forEach(product => {
+                    baseBlendYields[product] = crude1.yields[product] * percent1 + crude2.yields[product] * percent2;
+                });
+                
+                // Calculate revenue
+                const revenue = (baseBlendYields.gasoline || 0) * (marketPrices.gasoline87 || 75.80) +
+                               (baseBlendYields.jet || 0) * (marketPrices.jet || 89.21) +
+                               (baseBlendYields.diesel || 0) * (marketPrices.ulsd || 93.03) +
+                               (baseBlendYields.naphtha || 0) * (marketPrices.naphtha || 60.57) +
+                               (baseBlendYields.kerosene || 0) * (marketPrices.kerosene || 93.83) +
+                               (baseBlendYields.vgo || 0) * (marketPrices.vgo || 68.90) +
+                               (baseBlendYields.lpg || 0) * (marketPrices.lpg || 34.37) +
+                               (baseBlendYields.residual || 0) * (marketPrices.hsfo || 53.42);
+                
+                // Calculate costs
+                const baseAssumptions = getAssumptions();
+                const operatingCost = parseFloat(baseAssumptions.operatingCost) || 5;
+                const sulfurPenalty = (parseFloat(baseAssumptions.sulfurPenalty) || 2) * blendSulfur;
+                const apiBonus = blendAPI > 30 ? (parseFloat(baseAssumptions.apiBonus) || 0.5) * (blendAPI - 30) : 0;
+                const totalCrudeCost = blendFOBCost + blendTransportCost + operatingCost + sulfurPenalty - apiBonus;
+                const margin = revenue - totalCrudeCost;
+                
+                // Generate HTML results
+                const resultsHTML = `
+                    <div style="background: #f8f9fa; padding: 25px; border-radius: 15px; margin-top: 20px;">
+                        <h3 style="color: #2c3e50; margin-bottom: 20px; border-bottom: 2px solid #3498db; padding-bottom: 10px;">
+                            Blend Analysis Results
+                        </h3>
+                        
+                        <!-- Compatibility Assessment -->
+                        <div style="background: white; padding: 20px; border-radius: 10px; margin-bottom: 20px; border-left: 4px solid ${compatibilityColor};">
+                            <h4 style="margin-bottom: 15px;">Compatibility Assessment</h4>
+                            <div style="display: flex; align-items: center; margin-bottom: 15px;">
+                                <div style="font-size: 2em; font-weight: bold; color: ${compatibilityColor}; margin-right: 20px;">
+                                    ${compatibilityStatus}
+                                </div>
+                                <div style="flex: 1;">
+                                    <div style="font-weight: 600; margin-bottom: 5px;">Final Score: ${(scoreToUse * 100).toFixed(0)}% | Blend CII: ${blendCII.toFixed(3)}</div>
+                                    <div style="color: #666; font-size: 0.9em;">${compatibilityDetails}</div>
+                                </div>
+                            </div>
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px;">
+                                <strong>Recommendations:</strong><br>
+                                ${recommendations}
+                            </div>
+                            
+                            <!-- Detailed Scoring Breakdown -->
+                            <details style="margin-top: 15px;">
+                                <summary style="cursor: pointer; font-weight: bold; padding: 10px; background: #e9ecef; border-radius: 5px;">
+                                    View Detailed Compatibility Analysis
+                                </summary>
+                                <table style="width: 100%; margin-top: 10px; font-size: 0.9em; border-collapse: collapse;">
+                                    <tr style="background: #dee2e6;">
+                                        <th style="text-align: left; padding: 8px; border: 1px solid #ced4da;">Factor</th>
+                                        <th style="text-align: center; padding: 8px; border: 1px solid #ced4da;">Value</th>
+                                        <th style="text-align: center; padding: 8px; border: 1px solid #ced4da;">Score</th>
+                                        <th style="text-align: center; padding: 8px; border: 1px solid #ced4da;">Weight</th>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">API Difference</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${apiDiff.toFixed(1)}°</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; background: ${apiCompatScore < 0.5 ? '#ffebee' : apiCompatScore < 0.7 ? '#fff8e1' : '#e8f5e9'}; color: ${apiCompatScore < 0.5 ? '#c62828' : apiCompatScore < 0.7 ? '#f57c00' : '#2e7d32'}">${(apiCompatScore * 100).toFixed(0)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">15%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Delta CII</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${deltaCII.toFixed(3)}</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; background: ${ciiCompatScore < 0.5 ? '#ffebee' : ciiCompatScore < 0.7 ? '#fff8e1' : '#e8f5e9'}; color: ${ciiCompatScore < 0.5 ? '#c62828' : ciiCompatScore < 0.7 ? '#f57c00' : '#2e7d32'}">${(ciiCompatScore * 100).toFixed(0)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">30%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Blend Stability (CII)</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${blendCII.toFixed(3)}</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; background: ${stabilityScore < 0.5 ? '#ffebee' : stabilityScore < 0.7 ? '#fff8e1' : '#e8f5e9'}; color: ${stabilityScore < 0.5 ? '#c62828' : stabilityScore < 0.7 ? '#f57c00' : '#2e7d32'}">${(stabilityScore * 100).toFixed(0)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">25%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Viscosity Ratio</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${viscRatio.toFixed(1)}:1</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; background: ${viscCompatScore < 0.5 ? '#ffebee' : viscCompatScore < 0.7 ? '#fff8e1' : '#e8f5e9'}; color: ${viscCompatScore < 0.5 ? '#c62828' : viscCompatScore < 0.7 ? '#f57c00' : '#2e7d32'}">${(viscCompatScore * 100).toFixed(0)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">10%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Sulfur Difference</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${sulfurDiff.toFixed(2)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; background: ${sulfurCompatScore < 0.5 ? '#ffebee' : sulfurCompatScore < 0.7 ? '#fff8e1' : '#e8f5e9'}; color: ${sulfurCompatScore < 0.5 ? '#c62828' : sulfurCompatScore < 0.7 ? '#f57c00' : '#2e7d32'}">${(sulfurCompatScore * 100).toFixed(0)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">5%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Pour Point Diff</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${pourDiff.toFixed(0)}°F</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; background: ${pourCompatScore < 0.5 ? '#ffebee' : pourCompatScore < 0.7 ? '#fff8e1' : '#e8f5e9'}; color: ${pourCompatScore < 0.5 ? '#c62828' : pourCompatScore < 0.7 ? '#f57c00' : '#2e7d32'}">${(pourCompatScore * 100).toFixed(0)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">5%</td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">P-Ratio Difference</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${pRatioDiff.toFixed(2)}</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; background: ${pRatioScore < 0.5 ? '#ffebee' : pRatioScore < 0.7 ? '#fff8e1' : '#e8f5e9'}; color: ${pRatioScore < 0.5 ? '#c62828' : pRatioScore < 0.7 ? '#f57c00' : '#2e7d32'}">${(pRatioScore * 100).toFixed(0)}%</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">10%</td>
+                                    </tr>
+                                    <tr style="font-weight: bold; background: #e9ecef;">
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Weighted Score</td>
+                                        <td colspan="2" style="text-align: center; padding: 8px; border: 1px solid #ced4da;">-</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da;">${(overallScore * 100).toFixed(0)}%</td>
+                                    </tr>
+                                    ${scoreToUse !== overallScore ? `
+                                    <tr style="background: #fff3cd;">
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Penalties Applied</td>
+                                        <td colspan="2" style="text-align: center; padding: 8px; border: 1px solid #ced4da; font-size: 0.85em;">
+                                            ${apiDiff > 30 ? 'Extreme API ' : ''}
+                                            ${apiDiff > 20 && apiDiff <= 30 ? 'High API ' : ''}
+                                            ${viscRatio > 40 ? 'Extreme Visc ' : ''}
+                                            ${viscRatio > 20 && viscRatio <= 40 ? 'High Visc ' : ''}
+                                            ${asphalteneDiff > 8 ? 'Asph Diff ' : ''}
+                                            ${saturatesDiff > 30 ? 'Sat Diff ' : ''}
+                                        </td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; color: #d9534f;">-${((overallScore - scoreToUse) * 100).toFixed(0)}%</td>
+                                    </tr>
+                                    <tr style="font-weight: bold; background: #d1ecf1;">
+                                        <td style="padding: 8px; border: 1px solid #ced4da;">Final Score</td>
+                                        <td colspan="2" style="text-align: center; padding: 8px; border: 1px solid #ced4da;">After Penalties</td>
+                                        <td style="text-align: center; padding: 8px; border: 1px solid #ced4da; color: ${scoreToUse < 0.5 ? '#c62828' : scoreToUse < 0.7 ? '#f57c00' : '#2e7d32'}">${(scoreToUse * 100).toFixed(0)}%</td>
+                                    </tr>` : ''}
+                                </table>
+                            </details>
+                        </div>
+                        
+                        <!-- Blend Properties -->
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                            
+                            <!-- Physical Properties -->
+                            <div style="background: white; padding: 20px; border-radius: 10px;">
+                                <h4 style="color: #34495e; margin-bottom: 15px;">Physical Properties</h4>
+                                <table style="width: 100%;">
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">API Gravity:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${blendAPI.toFixed(1)}°</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Sulfur Content:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${blendSulfur.toFixed(2)}%</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Viscosity:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${blendViscosity.toFixed(1)} cSt</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Pour Point:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${blendPourPoint.toFixed(0)}°C</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">TAN:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${blendTAN.toFixed(2)} mgKOH/g</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- Chemical Composition -->
+                            <div style="background: white; padding: 20px; border-radius: 10px;">
+                                <h4 style="color: #34495e; margin-bottom: 15px;">SARA Composition</h4>
+                                <table style="width: 100%;">
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Saturates:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${(blendSARA.saturates * 100).toFixed(1)}%</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Aromatics:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${(blendSARA.aromatics * 100).toFixed(1)}%</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Resins:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${(blendSARA.resins * 100).toFixed(1)}%</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Asphaltenes:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${(blendSARA.asphaltenes * 100).toFixed(1)}%</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- Metals Content -->
+                            <div style="background: white; padding: 20px; border-radius: 10px;">
+                                <h4 style="color: #34495e; margin-bottom: 15px;">Metals & Contaminants</h4>
+                                <table style="width: 100%;">
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Vanadium:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${blendVanadium.toFixed(1)} ppm</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Nickel:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${blendNickel.toFixed(1)} ppm</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">V + Ni:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>${(blendVanadium + blendNickel).toFixed(1)} ppm</strong></td>
+                                    </tr>
+                                </table>
+                            </div>
+                            
+                            <!-- Economics -->
+                            <div style="background: white; padding: 20px; border-radius: 10px;">
+                                <h4 style="color: #34495e; margin-bottom: 15px;">Economics (per barrel)</h4>
+                                <table style="width: 100%;">
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">FOB Cost:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>$${blendFOBCost.toFixed(2)}</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">CIF Houston:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>$${(blendFOBCost + blendTransportCost).toFixed(2)}</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 1px solid #dee2e6;">
+                                        <td style="padding: 8px;">Revenue:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>$${revenue.toFixed(2)}</strong></td>
+                                    </tr>
+                                    <tr style="border-bottom: 2px solid #dee2e6;">
+                                        <td style="padding: 8px;">Total Cost:</td>
+                                        <td style="text-align: right; padding: 8px;"><strong>$${totalCrudeCost.toFixed(2)}</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td style="padding: 8px;"><strong>Margin:</strong></td>
+                                        <td style="text-align: right; padding: 8px; color: ${margin > 0 ? '#28a745' : '#dc3545'};">
+                                            <strong>$${margin.toFixed(2)}</strong>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </div>
+                        </div>
+                        
+                        <!-- Yield Profile -->
+                        <div style="background: white; padding: 20px; border-radius: 10px; margin-top: 20px;">
+                            <h4 style="color: #34495e; margin-bottom: 15px;">Blend Yield Profile</h4>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
+                                <div style="text-align: center; padding: 10px; background: #e3f2fd; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">LPG</div>
+                                    <div style="font-weight: bold; color: #1976d2;">${(baseBlendYields.lpg * 100).toFixed(1)}%</div>
+                                </div>
+                                <div style="text-align: center; padding: 10px; background: #f3e5f5; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">Naphtha</div>
+                                    <div style="font-weight: bold; color: #7b1fa2;">${(baseBlendYields.naphtha * 100).toFixed(1)}%</div>
+                                </div>
+                                <div style="text-align: center; padding: 10px; background: #e8f5e9; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">Gasoline</div>
+                                    <div style="font-weight: bold; color: #388e3c;">${(baseBlendYields.gasoline * 100).toFixed(1)}%</div>
+                                </div>
+                                <div style="text-align: center; padding: 10px; background: #fff3e0; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">Kerosene</div>
+                                    <div style="font-weight: bold; color: #f57c00;">${(baseBlendYields.kerosene * 100).toFixed(1)}%</div>
+                                </div>
+                                <div style="text-align: center; padding: 10px; background: #fce4ec; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">Jet</div>
+                                    <div style="font-weight: bold; color: #c2185b;">${(baseBlendYields.jet * 100).toFixed(1)}%</div>
+                                </div>
+                                <div style="text-align: center; padding: 10px; background: #e0f2f1; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">Diesel</div>
+                                    <div style="font-weight: bold; color: #00796b;">${(baseBlendYields.diesel * 100).toFixed(1)}%</div>
+                                </div>
+                                <div style="text-align: center; padding: 10px; background: #f1f8e9; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">VGO</div>
+                                    <div style="font-weight: bold; color: #689f38;">${(baseBlendYields.vgo * 100).toFixed(1)}%</div>
+                                </div>
+                                <div style="text-align: center; padding: 10px; background: #efebe9; border-radius: 8px;">
+                                    <div style="font-size: 0.85em; color: #666;">Residual</div>
+                                    <div style="font-weight: bold; color: #5d4037;">${(baseBlendYields.residual * 100).toFixed(1)}%</div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Volume Details -->
+                        <div style="background: #e8eaf6; padding: 15px; border-radius: 10px; margin-top: 20px;">
+                            <strong>Blend Volume:</strong> ${volume.toLocaleString()} barrels 
+                            (${crude1Name}: ${(volume * percent1).toLocaleString()} bbl, ${crude2Name}: ${(volume * percent2).toLocaleString()} bbl)
+                        </div>
+                    </div>
+                `;
+                
+                // Display results
+                const resultsDiv = document.getElementById('blendResults');
+                if (resultsDiv) {
+                    resultsDiv.innerHTML = resultsHTML;
+                    resultsDiv.style.display = 'block';
+                    console.log('Blend calculation successful');
+                    
+                    // Scroll to results
+                    resultsDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                } else {
+                    console.error('blendResults div not found');
+                    alert('Error: Cannot display results (element not found)');
+                }
+                
+            } catch (error) {
+                console.error('Error in calculateBlend:', error);
+                console.error('Stack trace:', error.stack);
+                alert('An error occurred while calculating blend. Check console for details.');
             }
-            
-            const crude1 = crudeDatabase.find(c => c.name === crude1Name);
-            const crude2 = crudeDatabase.find(c => c.name === crude2Name);
-            
-            // Calculate blend properties
-            const blendAPI = crude1.api * percent1 + crude2.api * percent2;
-            const blendSulfur = crude1.sulfur * percent1 + crude2.sulfur * percent2;
-            const blendTransportCost = crude1.transportCost * percent1 + crude2.transportCost * percent2;
-            
-            // Calculate base blend yields
-            const baseBlendYields = {};
-            Object.keys(crude1.yields).forEach(product => {
-                baseBlendYields[product] = crude1.yields[product] * percent1 + crude2.yields[product] * percent2;
-            });
-            
-            // Apply optimization adjustments to yields
-            const optimizedYields = {...baseBlendYields};
-            let optimizationNote = '';
-            
-            if (refineryConfig === 'medium' || refineryConfig === 'complex') {
-                switch(optimizationTarget) {
-                    case 'maxGasoline':
-                        // Maximize gasoline: FCC in max gasoline mode, minimal diesel cuts
-                        if (refineryConfig === 'medium' || refineryConfig === 'complex') {
-                            const vgoToGasoline = optimizedYields.vgo * 0.60; // Higher gasoline yield from FCC
-                            const vgoToLCO = optimizedYields.vgo * 0.25; // Less diesel
-                            optimizedYields.gasoline += vgoToGasoline;
-                            optimizedYields.diesel += vgoToLCO;
-                            optimizedYields.vgo = optimizedYields.vgo * 0.15; // Remaining heavy cycle oil
+        }
+        
+        // Find optimal blends to match target specifications
+        function findOptimalBlends() {
+            try {
+                const targetAPI = parseFloat(document.getElementById('targetAPI').value);
+                const targetSulfur = parseFloat(document.getElementById('targetSulfur').value);
+                const targetCrudeSelect = document.getElementById('targetCrude').value;
+                const tolerance = document.getElementById('toleranceLevel').value;
+                const volume = parseFloat(document.getElementById('optimizeVolume').value) || 100000;
+                const priority = document.getElementById('optimizePriority').value;
+                const compatibilityLevel = document.getElementById('compatibilityStrict').value;
+                
+                // If a target crude is selected, use its properties
+                let targetProps = { api: targetAPI, sulfur: targetSulfur };
+                if (targetCrudeSelect) {
+                    const targetCrude = crudeDatabase.find(c => c.name === targetCrudeSelect);
+                    if (targetCrude) {
+                        targetProps = { api: targetCrude.api, sulfur: targetCrude.sulfur };
+                        // Update input fields to show selected crude properties
+                        document.getElementById('targetAPI').value = targetCrude.api.toFixed(1);
+                        document.getElementById('targetSulfur').value = targetCrude.sulfur.toFixed(2);
+                    }
+                }
+                
+                if (!targetProps.api || targetProps.sulfur === undefined || isNaN(targetProps.api) || isNaN(targetProps.sulfur)) {
+                    alert('Please specify target API and Sulfur content or select a reference crude');
+                    return;
+                }
+                
+                console.log('Finding blends for target:', targetProps);
+                
+                // Set tolerances based on selection
+                let apiTolerance = 1.0;
+                let sulfurTolerance = 0.2;
+                if (tolerance === 'tight') {
+                    apiTolerance = 0.5;
+                    sulfurTolerance = 0.1;
+                } else if (tolerance === 'loose') {
+                    apiTolerance = 2.0;
+                    sulfurTolerance = 0.4;
+                }
+                
+                // Find all possible blend combinations
+                const blendCandidates = [];
+                
+                for (let i = 0; i < crudeDatabase.length; i++) {
+                for (let j = i + 1; j < crudeDatabase.length; j++) {
+                    const crude1 = crudeDatabase[i];
+                    const crude2 = crudeDatabase[j];
+                    
+                    // Skip if crudes have same API (can't solve for unique ratio)
+                    if (Math.abs(crude1.api - crude2.api) < 0.1) continue;
+                    
+                    // Calculate blend percentages needed to achieve target
+                    // Using weighted average: target = crude1 * x + crude2 * (1-x)
+                    // Solve for x using API as primary constraint
+                    const x = (targetProps.api - crude2.api) / (crude1.api - crude2.api);
+                    
+                    if (!isNaN(x) && isFinite(x) && x >= 0 && x <= 1) { // Valid blend ratio
+                        const blendAPI = crude1.api * x + crude2.api * (1 - x);
+                        const blendSulfur = crude1.sulfur * x + crude2.sulfur * (1 - x);
+                        
+                        // Check if blend meets specifications within tolerance
+                        if (Math.abs(blendAPI - targetProps.api) <= apiTolerance &&
+                            Math.abs(blendSulfur - targetProps.sulfur) <= sulfurTolerance) {
                             
-                            // Naphtha reforming for more gasoline
-                            const naphthaReformed = optimizedYields.naphtha * 0.30;
-                            optimizedYields.gasoline += naphthaReformed * 0.85;
-                            optimizedYields.naphtha -= naphthaReformed;
-                        }
-                        optimizationNote = 'FCC maximized for gasoline production, naphtha reforming active';
-                        break;
-                        
-                    case 'maxDistillate':
-                        // Maximize diesel: FCC in max distillate mode
-                        if (refineryConfig === 'medium' || refineryConfig === 'complex') {
-                            const vgoToGasoline = optimizedYields.vgo * 0.35; // Less gasoline
-                            const vgoToLCO = optimizedYields.vgo * 0.50; // Maximum diesel
-                            optimizedYields.gasoline += vgoToGasoline;
-                            optimizedYields.diesel += vgoToLCO;
-                            optimizedYields.vgo = optimizedYields.vgo * 0.15;
+                            // Calculate compatibility (CII) - move outside of compatibilityOK check
+                            const cii = calculateCompatibilityIndex(crude1, crude2);
                             
-                            // Convert some kerosene to diesel pool
-                            const keroToDiesel = optimizedYields.kerosene * 0.50;
-                            optimizedYields.diesel += keroToDiesel;
-                            optimizedYields.kerosene -= keroToDiesel;
+                            // Check compatibility requirements
+                            let compatibilityOK = true;
+                            if (compatibilityLevel === 'strict' && cii >= 0.7) compatibilityOK = false;
+                            if (compatibilityLevel === 'moderate' && cii >= 0.9) compatibilityOK = false;
+                            
+                            if (compatibilityOK) {
+                                // Calculate economics
+                                const crude1FOB = crude1.fobPrice || 60;
+                                const crude2FOB = crude2.fobPrice || 60;
+                                const blendFOB = crude1FOB * x + crude2FOB * (1 - x);
+                                const blendTransport = (crude1.transportCost || 0) * x + (crude2.transportCost || 0) * (1 - x);
+                                const totalCost = (blendFOB + blendTransport) * volume;
+                                
+                                // Estimate margin (simplified)
+                                const blendYields = {};
+                                Object.keys(crude1.yields).forEach(product => {
+                                    blendYields[product] = crude1.yields[product] * x + crude2.yields[product] * (1 - x);
+                                });
+                                
+                                // Map yields to market prices with proper names
+                                const revenue = ((blendYields.gasoline || 0) * (marketPrices.gasoline87 || 75.80) +
+                                               (blendYields.jet || 0) * (marketPrices.jet || 89.21) +
+                                               (blendYields.diesel || 0) * (marketPrices.ulsd || 93.03) +
+                                               (blendYields.naphtha || 0) * (marketPrices.naphtha || 60.57) +
+                                               (blendYields.kerosene || 0) * (marketPrices.kerosene || 93.83) +
+                                               (blendYields.vgo || 0) * (marketPrices.vgo || 68.90) +
+                                               (blendYields.lpg || 0) * (marketPrices.lpg || 34.37) +
+                                               (blendYields.residual || 0) * (marketPrices.hsfo || 53.42)) * volume;
+                                
+                                const margin = revenue - totalCost;
+                                
+                                blendCandidates.push({
+                                    crude1: crude1.name,
+                                    crude2: crude2.name,
+                                    percent1: (x * 100).toFixed(1),
+                                    percent2: ((1 - x) * 100).toFixed(1),
+                                    blendAPI: blendAPI.toFixed(1),
+                                    blendSulfur: blendSulfur.toFixed(2),
+                                    cii: cii.toFixed(2),
+                                    compatibility: cii < 0.7 ? 'Excellent' : cii < 0.9 ? 'Good' : 'Marginal',
+                                    fobCost: blendFOB.toFixed(2),
+                                    cifCost: (blendFOB + blendTransport).toFixed(2),
+                                    totalCost: totalCost,
+                                    margin: margin,
+                                    marginPerBbl: (margin / volume).toFixed(2),
+                                    logisticsScore: calculateLogisticsScore(crude1, crude2)
+                                });
+                            }
                         }
-                        optimizationNote = 'FCC in max distillate mode, kerosene to diesel pool';
-                        break;
-                        
-                    case 'maxJet':
-                        // Maximize jet fuel: Optimize kerosene and jet cuts
-                        const naphthaToJet = optimizedYields.naphtha * 0.15;
-                        optimizedYields.jet += naphthaToJet;
-                        optimizedYields.naphtha -= naphthaToJet;
-                        
-                        // Convert light diesel to jet pool
-                        const dieselToJet = optimizedYields.diesel * 0.20;
-                        optimizedYields.jet += dieselToJet;
-                        optimizedYields.diesel -= dieselToJet;
-                        
-                        // Maximize kerosene/jet cut
-                        optimizedYields.jet += optimizedYields.kerosene * 0.80;
-                        optimizedYields.kerosene *= 0.20;
-                        optimizationNote = 'Maximized jet fuel cuts, expanded kerosene range';
-                        break;
-                        
-                    default: // balanced
-                        // Standard FCC operation
-                        if (refineryConfig === 'medium' || refineryConfig === 'complex') {
-                            const vgoToGasoline = optimizedYields.vgo * 0.50;
-                            const vgoToLCO = optimizedYields.vgo * 0.30;
-                            optimizedYields.gasoline += vgoToGasoline;
-                            optimizedYields.diesel += vgoToLCO;
-                            optimizedYields.vgo = optimizedYields.vgo * 0.20;
-                        }
-                        optimizationNote = 'Balanced yield optimization';
+                    }
                 }
             }
             
-            // Apply complex refinery coker if selected
-            if (refineryConfig === 'complex') {
-                const residToProducts = optimizedYields.residual * 0.70; // 70% of residue upgraded
-                optimizedYields.naphtha += residToProducts * 0.25;
-                optimizedYields.diesel += residToProducts * 0.35;
-                optimizedYields.gasoline += residToProducts * 0.15;
-                optimizedYields.residual *= 0.30; // Only 30% remains as heavy residue/coke
-                optimizationNote += ' + Coker processing heavy residue';
+            // Sort candidates based on priority
+            if (priority === 'cost') {
+                blendCandidates.sort((a, b) => a.totalCost - b.totalCost);
+            } else if (priority === 'margin') {
+                blendCandidates.sort((a, b) => b.margin - a.margin);
+            } else if (priority === 'compatibility') {
+                blendCandidates.sort((a, b) => parseFloat(a.cii) - parseFloat(b.cii));
+            } else if (priority === 'logistics') {
+                blendCandidates.sort((a, b) => b.logisticsScore - a.logisticsScore);
             }
             
-            // Calculate blend margin with CIF Houston costs
-            const baseAssumptions = getAssumptions();
-            const crudeFOBCost = parseFloat(baseAssumptions.baseCrudeCost) || 75;
-            const operatingCost = parseFloat(baseAssumptions.operatingCost) || 5;
-            const sulfurPenalty = (parseFloat(baseAssumptions.sulfurPenalty) || 2) * blendSulfur;
-            const apiBonus = blendAPI > 30 ? (parseFloat(baseAssumptions.apiBonus) || 0.5) * (blendAPI - 30) : 0;
+            console.log(`Found ${blendCandidates.length} suitable blends`);
             
-            const totalCrudeCost = crudeFOBCost + blendTransportCost + operatingCost + sulfurPenalty - apiBonus;
+            // Display results
+            displayOptimizationResults(blendCandidates, targetProps, volume);
             
-            // Calculate revenue from optimized yields
-            let revenue = 0;
-            revenue += optimizedYields.lpg * marketPrices.lpg;
-            revenue += optimizedYields.naphtha * marketPrices.naphtha;
-            revenue += optimizedYields.gasoline * marketPrices.gasoline87;
-            revenue += optimizedYields.kerosene * marketPrices.kerosene;
-            revenue += optimizedYields.jet * marketPrices.jet;
-            revenue += optimizedYields.diesel * marketPrices.diesel50;
-            revenue += optimizedYields.vgo * marketPrices.vgo;
-            revenue += optimizedYields.residual * marketPrices.hsfo;
-            
-            const margin = revenue - totalCrudeCost;
-            
-            // Determine compatibility
-            const apiDiff = Math.abs(crude1.api - crude2.api);
-            let compatibility = 'Excellent';
-            let compatibilityColor = '#28a745';
-            if (apiDiff > 15) {
-                compatibility = 'Poor - Risk of Separation';
-                compatibilityColor = '#dc3545';
-            } else if (apiDiff > 8) {
-                compatibility = 'Good';
-                compatibilityColor = '#ffc107';
+            } catch (error) {
+                console.error('Error in findOptimalBlends:', error);
+                alert('An error occurred while finding optimal blends. Please check your inputs and try again.');
             }
+        }
+        
+        // Calculate compatibility index between two crudes
+        function calculateCompatibilityIndex(crude1, crude2) {
+            // Use default SARA fractions if not available
+            const defaultSARA = { saturates: 0.5, aromatics: 0.3, resins: 0.15, asphaltenes: 0.05 };
+            const s1 = crude1.sara || defaultSARA;
+            const s2 = crude2.sara || defaultSARA;
             
-            // Determine blend classification
-            const blendClass = blendAPI > 31.1 ? 'Light' : 'Heavy';
-            const blendSweet = blendSulfur < 0.5 ? 'Sweet' : 'Sour';
+            // CII = |S1 - S2| + |A1 - A2|
+            const saturatesDiff = Math.abs((s1.saturates || 0.5) - (s2.saturates || 0.5));
+            const asphaltenesDiff = Math.abs((s1.asphaltenes || 0.05) - (s2.asphaltenes || 0.05));
+            const cii = saturatesDiff + asphaltenesDiff;
             
-            // Generate results HTML
-            const resultsHTML = `
-                <div style="background: white; border-radius: 15px; padding: 25px; box-shadow: 0 10px 40px rgba(0,0,0,0.2); margin-top: 30px;">
-                    <h3 style="color: #2c3e50; margin-bottom: 20px;">Blend Analysis Results</h3>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-                            <h4 style="color: #667eea; margin-bottom: 10px;">Component 1</h4>
-                            <div style="font-size: 1.2em; font-weight: bold;">${crude1.name}</div>
-                            <div style="font-size: 2em; font-weight: bold; color: #667eea; margin: 10px 0;">${(percent1 * 100).toFixed(0)}%</div>
-                            <div style="font-size: 0.9em; color: #666;">${(volume * percent1).toLocaleString()} bbl/day</div>
-                            <div style="font-size: 0.85em; color: #999; margin-top: 5px;">CIF Houston: $${(crudeFOBCost + crude1.transportCost).toFixed(2)}/bbl</div>
+            return cii;
+        }
+        
+        // Calculate logistics score (preference for nearby sources)
+        function calculateLogisticsScore(crude1, crude2) {
+            const transport1 = crude1.transportCost || 0;
+            const transport2 = crude2.transportCost || 0;
+            const avgTransport = (transport1 + transport2) / 2;
+            // Lower transport cost = higher logistics score
+            return 10 - avgTransport;
+        }
+        
+        // Display optimization results
+        function displayOptimizationResults(candidates, target, volume) {
+            try {
+                const resultsDiv = document.getElementById('optimizationResults');
+                if (!resultsDiv) {
+                    console.error('optimizationResults element not found');
+                    return;
+                }
+                
+                if (!candidates || candidates.length === 0) {
+                    resultsDiv.innerHTML = `
+                        <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; color: #721c24;">
+                            <h4>No Suitable Blends Found</h4>
+                            <p>No crude combinations meet your specifications. Try:</p>
+                            <ul style="margin-top: 10px;">
+                                <li>Adjusting tolerance to "Loose" for wider range</li>
+                                <li>Target API between 25-45 (available range)</li>
+                                <li>Target Sulfur between 0.1-3.5% (available range)</li>
+                                <li>Selecting a reference crude from the dropdown</li>
+                            </ul>
                         </div>
+                    `;
+                } else {
+                // Show top 5 candidates
+                const topCandidates = candidates.slice(0, 5);
+                const best = topCandidates[0];
+                
+                let resultsHTML = `
+                    <div style="background: rgba(255,255,255,0.95); padding: 20px; border-radius: 10px; color: #333;">
+                        <h4 style="color: #2c3e50; margin-bottom: 15px;">Optimal Blend Solutions</h4>
+                        <p style="margin-bottom: 15px;">Target: API ${target.api.toFixed(1)}°, Sulfur ${target.sulfur.toFixed(2)}% | Volume: ${volume.toLocaleString()} bbl</p>
                         
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 20px; border-radius: 10px; text-align: center; color: white;">
-                            <div style="font-size: 1.5em; margin-bottom: 10px;">➕</div>
-                            <div style="font-size: 1.1em; font-weight: bold;">BLEND</div>
-                            <div style="font-size: 0.9em; margin-top: 10px;">Total Volume</div>
-                            <div style="font-size: 1.2em; font-weight: bold;">${volume.toLocaleString()} bbl/day</div>
-                            <div style="font-size: 0.85em; margin-top: 5px;">CIF Houston: $${totalCrudeCost.toFixed(2)}/bbl</div>
-                        </div>
-                        
-                        <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; text-align: center;">
-                            <h4 style="color: #764ba2; margin-bottom: 10px;">Component 2</h4>
-                            <div style="font-size: 1.2em; font-weight: bold;">${crude2.name}</div>
-                            <div style="font-size: 2em; font-weight: bold; color: #764ba2; margin: 10px 0;">${(percent2 * 100).toFixed(0)}%</div>
-                            <div style="font-size: 0.9em; color: #666;">${(volume * percent2).toLocaleString()} bbl/day</div>
-                            <div style="font-size: 0.85em; color: #999; margin-top: 5px;">CIF Houston: $${(crudeFOBCost + crude2.transportCost).toFixed(2)}/bbl</div>
-                        </div>
-                    </div>
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 30px;">
-                        <div>
-                            <h4 style="color: #34495e; margin-bottom: 15px;">Blend Properties</h4>
-                            <table style="width: 100%;">
-                                <tr style="border-bottom: 2px solid #dee2e6;">
-                                    <td style="padding: 10px;"><strong>Property</strong></td>
-                                    <td style="padding: 10px; text-align: center;"><strong>Blend</strong></td>
-                                    <td style="padding: 10px; text-align: center;">${crude1.name}</td>
-                                    <td style="padding: 10px; text-align: center;">${crude2.name}</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #dee2e6;">
-                                    <td style="padding: 10px;">API Gravity</td>
-                                    <td style="padding: 10px; text-align: center; font-weight: bold;">${blendAPI.toFixed(1)}°</td>
-                                    <td style="padding: 10px; text-align: center;">${crude1.api.toFixed(1)}°</td>
-                                    <td style="padding: 10px; text-align: center;">${crude2.api.toFixed(1)}°</td>
-                                </tr>
-                                <tr style="border-bottom: 1px solid #dee2e6;">
-                                    <td style="padding: 10px;">Sulfur Content</td>
-                                    <td style="padding: 10px; text-align: center; font-weight: bold;">${blendSulfur.toFixed(2)}%</td>
-                                    <td style="padding: 10px; text-align: center;">${crude1.sulfur.toFixed(2)}%</td>
-                                    <td style="padding: 10px; text-align: center;">${crude2.sulfur.toFixed(2)}%</td>
-                                </tr>
-                                <tr>
-                                    <td style="padding: 10px;">Classification</td>
-                                    <td style="padding: 10px; text-align: center; font-weight: bold;">${blendClass} ${blendSweet}</td>
-                                    <td style="padding: 10px; text-align: center; font-size: 0.9em;">${crude1.type}</td>
-                                    <td style="padding: 10px; text-align: center; font-size: 0.9em;">${crude2.type}</td>
-                                </tr>
-                            </table>
-                        </div>
-                        
-                        <div>
-                            <h4 style="color: #34495e; margin-bottom: 15px;">Compatibility Assessment</h4>
-                            <div style="background: ${compatibilityColor}20; border: 2px solid ${compatibilityColor}; padding: 20px; border-radius: 10px; text-align: center;">
-                                <div style="font-size: 1.5em; font-weight: bold; color: ${compatibilityColor}; margin-bottom: 10px;">${compatibility}</div>
-                                <div style="color: #666;">API Differential: ${apiDiff.toFixed(1)}°</div>
-                            </div>
-                            
-                            <div style="margin-top: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px;">
-                                <strong>Recommendations:</strong>
-                                <ul style="margin-top: 10px; margin-left: 20px; color: #666;">
-                                    ${apiDiff > 15 ? 
-                                        '<li>Consider adding demulsifier</li><li>Ensure adequate mixing</li><li>Monitor for separation</li>' : 
-                                        apiDiff > 8 ? 
-                                        '<li>Normal processing expected</li><li>Standard mixing sufficient</li>' :
-                                        '<li>Excellent compatibility</li><li>No special handling required</li>'}
-                                </ul>
+                        <!-- Best Option Highlight -->
+                        <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); color: white; padding: 15px; border-radius: 8px; margin-bottom: 20px;">
+                            <h5 style="margin-bottom: 10px;">Best Option</h5>
+                            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px;">
+                                <div>
+                                    <strong>${best.crude1}</strong> (${best.percent1}%) + <strong>${best.crude2}</strong> (${best.percent2}%)
+                                </div>
+                                <div>API: ${best.blendAPI}° | Sulfur: ${best.blendSulfur}%</div>
+                                <div>FOB: $${best.fobCost}/bbl | CIF: $${best.cifCost}/bbl</div>
+                                <div>Margin: $${best.marginPerBbl}/bbl | ${best.compatibility} Compatibility</div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <h4 style="color: #34495e; margin: 30px 0 15px 0;">Optimization Results - ${refineryConfig.charAt(0).toUpperCase() + refineryConfig.slice(1)} Refinery</h4>
-                    ${optimizationNote ? `<div style="background: #e1f5fe; padding: 15px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #03a9f4;">
-                        <strong style="color: #01579b;">Optimization Mode:</strong> ${optimizationTarget === 'maxGasoline' ? 'Maximum Gasoline' : optimizationTarget === 'maxDistillate' ? 'Maximum Distillate' : optimizationTarget === 'maxJet' ? 'Maximum Jet Fuel' : 'Balanced Yields'}
-                        <div style="font-size: 0.9em; color: #0277bd; margin-top: 5px;">${optimizationNote}</div>
-                    </div>` : ''}
-                    
-                    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 30px;">
-                        <div style="background: linear-gradient(135deg, #28a745 0%, #20c997 100%); padding: 20px; border-radius: 10px; color: white; text-align: center;">
-                            <div style="font-size: 1.1em; margin-bottom: 5px;">Revenue</div>
-                            <div style="font-size: 2em; font-weight: bold;">$${revenue.toFixed(2)}/bbl</div>
-                            <div style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">$${(revenue * volume).toLocaleString()}/day</div>
-                        </div>
-                        <div style="background: linear-gradient(135deg, #dc3545 0%, #e91e63 100%); padding: 20px; border-radius: 10px; color: white; text-align: center;">
-                            <div style="font-size: 1.1em; margin-bottom: 5px;">Margin (CIF Houston)</div>
-                            <div style="font-size: 2em; font-weight: bold;">$${margin.toFixed(2)}/bbl</div>
-                            <div style="font-size: 0.9em; margin-top: 5px; opacity: 0.9;">$${(margin * volume).toLocaleString()}/day</div>
-                        </div>
-                    </div>
-                    
-                    <h4 style="color: #34495e; margin: 20px 0 15px 0;">Optimized Product Yields</h4>
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 10px;">
-                        <div style="background: #e3f2fd; padding: 10px; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 0.85em; color: #666;">LPG</div>
-                            <div style="font-weight: bold; color: #1976d2;">${(optimizedYields.lpg * 100).toFixed(1)}%</div>
-                            ${Math.abs(optimizedYields.lpg - baseBlendYields.lpg) > 0.001 ? `<div style="font-size: 0.75em; color: #666;">(base: ${(baseBlendYields.lpg * 100).toFixed(1)}%)</div>` : ''}
-                        </div>
-                        <div style="background: #e8f5e9; padding: 10px; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 0.85em; color: #666;">Naphtha</div>
-                            <div style="font-weight: bold; color: #388e3c;">${(optimizedYields.naphtha * 100).toFixed(1)}%</div>
-                            ${Math.abs(optimizedYields.naphtha - baseBlendYields.naphtha) > 0.001 ? `<div style="font-size: 0.75em; color: #666;">(base: ${(baseBlendYields.naphtha * 100).toFixed(1)}%)</div>` : ''}
-                        </div>
-                        <div style="background: #fff3e0; padding: 10px; border-radius: 6px; text-align: center; ${optimizationTarget === 'maxGasoline' ? 'border: 2px solid #f57c00;' : ''}">
-                            <div style="font-size: 0.85em; color: #666;">Gasoline</div>
-                            <div style="font-weight: bold; color: #f57c00;">${(optimizedYields.gasoline * 100).toFixed(1)}%</div>
-                            ${Math.abs(optimizedYields.gasoline - baseBlendYields.gasoline) > 0.001 ? `<div style="font-size: 0.75em; color: #666;">(base: ${(baseBlendYields.gasoline * 100).toFixed(1)}%)</div>` : ''}
-                        </div>
-                        <div style="background: #fce4ec; padding: 10px; border-radius: 6px; text-align: center; ${optimizationTarget === 'maxJet' ? 'border: 2px solid #c2185b;' : ''}">
-                            <div style="font-size: 0.85em; color: #666;">Jet/Kero</div>
-                            <div style="font-weight: bold; color: #c2185b;">${((optimizedYields.kerosene + optimizedYields.jet) * 100).toFixed(1)}%</div>
-                            ${Math.abs((optimizedYields.kerosene + optimizedYields.jet) - (baseBlendYields.kerosene + baseBlendYields.jet)) > 0.001 ? `<div style="font-size: 0.75em; color: #666;">(base: ${((baseBlendYields.kerosene + baseBlendYields.jet) * 100).toFixed(1)}%)</div>` : ''}
-                        </div>
-                        <div style="background: #f3e5f5; padding: 10px; border-radius: 6px; text-align: center; ${optimizationTarget === 'maxDistillate' ? 'border: 2px solid #7b1fa2;' : ''}">
-                            <div style="font-size: 0.85em; color: #666;">Diesel</div>
-                            <div style="font-weight: bold; color: #7b1fa2;">${(optimizedYields.diesel * 100).toFixed(1)}%</div>
-                            ${Math.abs(optimizedYields.diesel - baseBlendYields.diesel) > 0.001 ? `<div style="font-size: 0.75em; color: #666;">(base: ${(baseBlendYields.diesel * 100).toFixed(1)}%)</div>` : ''}
-                        </div>
-                        <div style="background: #e0e0e0; padding: 10px; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 0.85em; color: #666;">VGO</div>
-                            <div style="font-weight: bold; color: #616161;">${(optimizedYields.vgo * 100).toFixed(1)}%</div>
-                            ${Math.abs(optimizedYields.vgo - baseBlendYields.vgo) > 0.001 ? `<div style="font-size: 0.75em; color: #666;">(base: ${(baseBlendYields.vgo * 100).toFixed(1)}%)</div>` : ''}
-                        </div>
-                        <div style="background: #efebe9; padding: 10px; border-radius: 6px; text-align: center;">
-                            <div style="font-size: 0.85em; color: #666;">Residual</div>
-                            <div style="font-weight: bold; color: #5d4037;">${(optimizedYields.residual * 100).toFixed(1)}%</div>
-                            ${Math.abs(optimizedYields.residual - baseBlendYields.residual) > 0.001 ? `<div style="font-size: 0.75em; color: #666;">(base: ${(baseBlendYields.residual * 100).toFixed(1)}%)</div>` : ''}
-                        </div>
-                    </div>
-                    
-                    <div style="margin-top: 30px; padding: 20px; background: #f8f9fa; border-radius: 10px;">
-                        <h4 style="color: #34495e; margin-bottom: 15px;">Cost Breakdown (CIF Houston)</h4>
-                        <table style="width: 100%; font-size: 0.9em;">
-                            <tr style="border-bottom: 1px solid #dee2e6;">
-                                <td style="padding: 8px;">FOB Crude Cost:</td>
-                                <td style="text-align: right; padding: 8px;">$${crudeFOBCost.toFixed(2)}/bbl</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #dee2e6;">
-                                <td style="padding: 8px;">Average Transport to Houston:</td>
-                                <td style="text-align: right; padding: 8px;">$${blendTransportCost.toFixed(2)}/bbl</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #dee2e6;">
-                                <td style="padding: 8px;">Operating Cost:</td>
-                                <td style="text-align: right; padding: 8px;">$${operatingCost.toFixed(2)}/bbl</td>
-                            </tr>
-                            <tr style="border-bottom: 1px solid #dee2e6;">
-                                <td style="padding: 8px;">Sulfur Penalty:</td>
-                                <td style="text-align: right; padding: 8px; color: #dc3545;">$${sulfurPenalty.toFixed(2)}/bbl</td>
-                            </tr>
-                            <tr style="border-bottom: 2px solid #dee2e6;">
-                                <td style="padding: 8px;">API Bonus:</td>
-                                <td style="text-align: right; padding: 8px; color: #28a745;">-$${apiBonus.toFixed(2)}/bbl</td>
-                            </tr>
-                            <tr>
-                                <td style="padding: 8px;"><strong>Total Cost (CIF Houston):</strong></td>
-                                <td style="text-align: right; padding: 8px;"><strong>$${totalCrudeCost.toFixed(2)}/bbl</strong></td>
-                            </tr>
+                        
+                        <!-- All Top Options Table -->
+                        <table style="width: 100%; border-collapse: collapse;">
+                            <thead>
+                                <tr style="background: #f8f9fa;">
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Rank</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Blend Components</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Ratio</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">API/S</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">CIF $/bbl</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Margin $/bbl</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Compatibility</th>
+                                    <th style="padding: 10px; text-align: left; border-bottom: 2px solid #dee2e6;">Action</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                `;
+                
+                topCandidates.forEach((candidate, index) => {
+                    const rowColor = index === 0 ? '#d4edda' : index % 2 === 0 ? '#f8f9fa' : 'white';
+                    resultsHTML += `
+                        <tr style="background: ${rowColor};">
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">#${index + 1}</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${candidate.crude1} + ${candidate.crude2}</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${candidate.percent1}% / ${candidate.percent2}%</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${candidate.blendAPI}° / ${candidate.blendSulfur}%</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">$${candidate.cifCost}</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">$${candidate.marginPerBbl}</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">${candidate.compatibility}</td>
+                            <td style="padding: 10px; border-bottom: 1px solid #dee2e6;">
+                                <button onclick="applyOptimalBlend('${candidate.crude1}', '${candidate.crude2}', ${candidate.percent1}, ${candidate.percent2})" 
+                                        style="background: #667eea; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; font-size: 0.85em;">
+                                    Apply
+                                </button>
+                            </td>
+                        </tr>
+                    `;
+                });
+                
+                resultsHTML += `
+                            </tbody>
                         </table>
+                        <p style="margin-top: 15px; font-size: 0.9em; color: #666;">
+                            Found ${candidates.length} viable blends. Showing top 5 based on selected priority.
+                        </p>
                     </div>
-                </div>
-            `;
+                `;
+                
+                resultsDiv.innerHTML = resultsHTML;
+            }
             
-            document.getElementById('blendResults').innerHTML = resultsHTML;
-            document.getElementById('blendResults').style.display = 'block';
+            resultsDiv.style.display = 'block';
+            } catch (error) {
+                console.error('Error displaying optimization results:', error);
+                document.getElementById('optimizationResults').innerHTML = `
+                    <div style="background: rgba(255,255,255,0.9); padding: 20px; border-radius: 10px; color: #721c24;">
+                        <h4>Error Displaying Results</h4>
+                        <p>An error occurred. Please try again.</p>
+                    </div>
+                `;
+                document.getElementById('optimizationResults').style.display = 'block';
+            }
+        }
+        
+        // Apply selected optimal blend to main calculator
+        function applyOptimalBlend(crude1, crude2, percent1, percent2) {
+            // First ensure we're on the blending page
+            showBlendingPage();
+            
+            // Set the values
+            document.getElementById('blendCrude1').value = crude1;
+            document.getElementById('blendCrude2').value = crude2;
+            document.getElementById('blendPercent1').value = percent1;
+            document.getElementById('blendPercent2').value = percent2;
+            document.getElementById('blendPercent1Value').textContent = percent1 + '%';
+            document.getElementById('blendPercent2Value').textContent = percent2 + '%';
+            
+            // Update crude info displays
+            updateBlendInfo(1);
+            updateBlendInfo(2);
+            
+            // Scroll to main calculator
+            setTimeout(() => {
+                document.getElementById('mainBlendingSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+                // Calculate the blend after a short delay
+                setTimeout(() => calculateBlend(), 500);
+            }, 100);
+        }
+        
+        // Clear optimization results
+        function clearOptimizationResults() {
+            document.getElementById('optimizationResults').style.display = 'none';
+            document.getElementById('targetAPI').value = '';
+            document.getElementById('targetSulfur').value = '';
+            document.getElementById('targetCrude').value = '';
+        }
+        
+        
+        // Show Pricing Page (secret page)
+        function showPricingPage() {
+            document.getElementById('dashboardPage').style.display = 'none';
+            document.getElementById('lpModelPage').style.display = 'none';
+            document.getElementById('blendingPage').style.display = 'none';
+            document.getElementById('customCrudePage').style.display = 'none';
+            document.getElementById('assumptionsPage').style.display = 'none';
+            document.getElementById('pricingPage').style.display = 'block';
+            
+            // Load current prices into inputs
+            document.getElementById('price_brent').value = marketPrices.brent;
+            document.getElementById('price_wti').value = marketPrices.wti;
+            document.getElementById('price_dubai').value = marketPrices.dubai;
+            document.getElementById('price_lpg').value = marketPrices.lpg;
+            if (document.getElementById('price_propane') && marketPrices.propane) {
+                document.getElementById('price_propane').value = marketPrices.propane;
+            }
+            if (document.getElementById('price_butane') && marketPrices.butane) {
+                document.getElementById('price_butane').value = marketPrices.butane;
+            }
+            document.getElementById('price_lightNaphtha').value = marketPrices.lightNaphtha;
+            document.getElementById('price_naphtha').value = marketPrices.naphtha;
+            document.getElementById('price_reformate').value = marketPrices.reformate;
+            document.getElementById('price_gasoline87').value = marketPrices.gasoline87;
+            document.getElementById('price_gasoline92').value = marketPrices.gasoline92;
+            document.getElementById('price_gasoline95').value = marketPrices.gasoline95;
+            document.getElementById('price_alkylate').value = marketPrices.alkylate;
+            if (document.getElementById('price_mtbe') && marketPrices.mtbe) {
+                document.getElementById('price_mtbe').value = marketPrices.mtbe;
+            }
+            document.getElementById('price_kerosene').value = marketPrices.kerosene;
+            document.getElementById('price_jet').value = marketPrices.jet;
+            document.getElementById('price_ulsd').value = marketPrices.ulsd;
+            document.getElementById('price_diesel50').value = marketPrices.diesel50;
+            document.getElementById('price_heatingOil').value = marketPrices.heatingOil;
+            document.getElementById('price_marineGasoil').value = marketPrices.marineGasoil;
+            document.getElementById('price_vgo').value = marketPrices.vgo;
+            document.getElementById('price_lco').value = marketPrices.lco;
+            document.getElementById('price_hco').value = marketPrices.hco;
+            document.getElementById('price_cgo').value = marketPrices.cgo;
+            document.getElementById('price_hsfo').value = marketPrices.hsfo;
+            document.getElementById('price_vlsfo').value = marketPrices.vlsfo;
+            if (document.getElementById('price_lsResid') && marketPrices.lsResid) {
+                document.getElementById('price_lsResid').value = marketPrices.lsResid;
+            }
+            document.getElementById('price_coke').value = marketPrices.coke;
+            document.getElementById('price_sulfur').value = marketPrices.sulfur;
+            
+            // Calculate initial crack spreads
+            calculateCrackSpreads();
+        }
+        
+        // Calculate crack spreads based on proper relationships
+        function calculateCrackSpreads() {
+            const brent = parseFloat(document.getElementById('price_brent').value);
+            const wti = parseFloat(document.getElementById('price_wti').value);
+            const dubai = parseFloat(document.getElementById('price_dubai').value);
+            const maya = parseFloat(document.getElementById('price_maya').value) || 54.24;
+            const wcs = parseFloat(document.getElementById('price_wcs').value) || 53.30;
+            const gas87 = parseFloat(document.getElementById('price_gasoline87').value);
+            const ulsd = parseFloat(document.getElementById('price_ulsd').value);
+            
+            // 3-2-1 Crack Spread: (2×Gasoline + 1×Diesel)/3 - Crude
+            const crack321 = ((2 * gas87 + ulsd) / 3) - wti;
+            document.getElementById('calc_321crack').textContent = `$${crack321.toFixed(2)}/bbl`;
+            
+            // Diesel Crack: ULSD - Brent
+            const dieselCrack = ulsd - brent;
+            document.getElementById('calc_dieselcrack').textContent = `$${dieselCrack.toFixed(2)}/bbl`;
+            
+            // Gasoline Crack: Gasoline - Brent
+            const gasCrack = gas87 - brent;
+            document.getElementById('calc_gascrack').textContent = `$${gasCrack.toFixed(2)}/bbl`;
+            
+            // Heavy-Light Differential: WTI - Maya
+            const heavyLight = wti - maya;
+            document.getElementById('calc_heavylight').textContent = `$${heavyLight.toFixed(2)}/bbl`;
+            
+            // WCS Discount: WTI - WCS
+            const wcsDiscount = wti - wcs;
+            document.getElementById('calc_wcsdiscount').textContent = `$${wcsDiscount.toFixed(2)}/bbl`;
+            
+            // Brent-Dubai EFS: Brent - Dubai
+            const brentDubai = brent - dubai;
+            document.getElementById('calc_brentdubai').textContent = `$${brentDubai.toFixed(2)}/bbl`;
+        }
+        
+        // Update all prices and recalculate everything
+        function updateAllPrices() {
+            // Update marketPrices object
+            marketPrices.brent = parseFloat(document.getElementById('price_brent').value);
+            marketPrices.wti = parseFloat(document.getElementById('price_wti').value);
+            marketPrices.dubai = parseFloat(document.getElementById('price_dubai').value);
+            marketPrices.lpg = parseFloat(document.getElementById('price_lpg').value);
+            if (document.getElementById('price_propane')) {
+                marketPrices.propane = parseFloat(document.getElementById('price_propane').value);
+            }
+            if (document.getElementById('price_butane')) {
+                marketPrices.butane = parseFloat(document.getElementById('price_butane').value);
+            }
+            marketPrices.lightNaphtha = parseFloat(document.getElementById('price_lightNaphtha').value);
+            marketPrices.naphtha = parseFloat(document.getElementById('price_naphtha').value);
+            marketPrices.reformate = parseFloat(document.getElementById('price_reformate').value);
+            marketPrices.gasoline87 = parseFloat(document.getElementById('price_gasoline87').value);
+            marketPrices.gasoline92 = parseFloat(document.getElementById('price_gasoline92').value);
+            marketPrices.gasoline95 = parseFloat(document.getElementById('price_gasoline95').value);
+            marketPrices.alkylate = parseFloat(document.getElementById('price_alkylate').value);
+            if (document.getElementById('price_mtbe')) {
+                marketPrices.mtbe = parseFloat(document.getElementById('price_mtbe').value);
+            }
+            marketPrices.kerosene = parseFloat(document.getElementById('price_kerosene').value);
+            marketPrices.jet = parseFloat(document.getElementById('price_jet').value);
+            marketPrices.ulsd = parseFloat(document.getElementById('price_ulsd').value);
+            marketPrices.diesel50 = parseFloat(document.getElementById('price_diesel50').value);
+            marketPrices.heatingOil = parseFloat(document.getElementById('price_heatingOil').value);
+            marketPrices.marineGasoil = parseFloat(document.getElementById('price_marineGasoil').value);
+            marketPrices.vgo = parseFloat(document.getElementById('price_vgo').value);
+            marketPrices.lco = parseFloat(document.getElementById('price_lco').value);
+            marketPrices.hco = parseFloat(document.getElementById('price_hco').value);
+            marketPrices.cgo = parseFloat(document.getElementById('price_cgo').value);
+            marketPrices.hsfo = parseFloat(document.getElementById('price_hsfo').value);
+            marketPrices.vlsfo = parseFloat(document.getElementById('price_vlsfo').value);
+            if (document.getElementById('price_lsResid')) {
+                marketPrices.lsResid = parseFloat(document.getElementById('price_lsResid').value);
+            }
+            marketPrices.coke = parseFloat(document.getElementById('price_coke').value);
+            marketPrices.sulfur = parseFloat(document.getElementById('price_sulfur').value);
+            
+            // Calculate crack spreads
+            calculateCrackSpreads();
+            
+            // Update Market Trends section with calculated values
+            const crack321 = ((2 * marketPrices.gasoline87 + marketPrices.ulsd) / 3) - marketPrices.wti;
+            const dieselCrack = marketPrices.ulsd - marketPrices.brent;
+            const gasCrack = marketPrices.gasoline87 - marketPrices.brent;
+            const maya = parseFloat(document.getElementById('price_maya').value) || 54.24;
+            const wcs = parseFloat(document.getElementById('price_wcs').value) || 53.30;
+            const heavyLight = marketPrices.wti - maya;
+            const wcsDiscount = marketPrices.wti - wcs;
+            const brentDubai = marketPrices.brent - marketPrices.dubai;
+            
+            // Update the Market Trends display
+            // Get previous values for comparison
+            const prevCrack321 = parseFloat(document.getElementById('market-crack321')?.textContent.replace('$', '') || 0);
+            const prevDieselCrack = parseFloat(document.getElementById('market-dieselcrack')?.textContent.replace('$', '') || 0);
+            const prevGasCrack = parseFloat(document.getElementById('market-gascrack')?.textContent.replace('$', '') || 0);
+            const prevHeavyLight = parseFloat(document.getElementById('market-heavylight')?.textContent.replace('$', '') || 0);
+            const prevBrentDubai = parseFloat(document.getElementById('market-brentdubai')?.textContent.replace('$', '') || 0);
+            const prevWcsDiscount = parseFloat(document.getElementById('market-wcsdiscount')?.textContent.replace('$', '') || 0);
+            
+            // Calculate percentage changes
+            const crack321Change = prevCrack321 ? ((crack321 - prevCrack321) / prevCrack321 * 100) : 0;
+            const dieselChange = prevDieselCrack ? ((dieselCrack - prevDieselCrack) / prevDieselCrack * 100) : 0;
+            const gasChange = prevGasCrack ? ((gasCrack - prevGasCrack) / prevGasCrack * 100) : 0;
+            const heavyLightChange = prevHeavyLight ? ((heavyLight - prevHeavyLight) / prevHeavyLight * 100) : 0;
+            const brentDubaiChange = prevBrentDubai ? ((brentDubai - prevBrentDubai) / prevBrentDubai * 100) : 0;
+            const wcsChange = prevWcsDiscount ? ((wcsDiscount - prevWcsDiscount) / prevWcsDiscount * 100) : 0;
+            
+            // Helper function to get arrow and color
+            function getIndicator(value, change) {
+                if (Math.abs(change) < 0.5) return { arrow: '→', color: '#ffc107', changeText: '0%' };
+                if (change > 0) return { arrow: '▲', color: '#28a745', changeText: `+${change.toFixed(1)}%` };
+                return { arrow: '▼', color: '#dc3545', changeText: `${change.toFixed(1)}%` };
+            }
+            
+            // Update 3-2-1 Crack
+            const crack321Ind = getIndicator(crack321, crack321Change);
+            const crack321El = document.getElementById('market-crack321');
+            if (crack321El) {
+                crack321El.textContent = `$${crack321.toFixed(2)}/bbl ${crack321Ind.arrow} ${crack321Ind.changeText}`;
+                crack321El.style.color = crack321Ind.color;
+                crack321El.style.transition = 'all 0.5s ease';
+                crack321El.style.transform = 'scale(1.1)';
+                setTimeout(() => { crack321El.style.transform = 'scale(1)'; }, 500);
+            }
+            
+            // Update Diesel Crack
+            const dieselInd = getIndicator(dieselCrack, dieselChange);
+            const dieselEl = document.getElementById('market-dieselcrack');
+            if (dieselEl) {
+                dieselEl.textContent = `$${dieselCrack.toFixed(2)}/bbl ${dieselInd.arrow} ${dieselInd.changeText}`;
+                dieselEl.style.color = dieselInd.color;
+                dieselEl.style.transition = 'all 0.5s ease';
+                dieselEl.style.transform = 'scale(1.1)';
+                setTimeout(() => { dieselEl.style.transform = 'scale(1)'; }, 500);
+            }
+            
+            // Update Gasoline Crack
+            const gasInd = getIndicator(gasCrack, gasChange);
+            const gasEl = document.getElementById('market-gascrack');
+            if (gasEl) {
+                gasEl.textContent = `$${gasCrack.toFixed(2)}/bbl ${gasInd.arrow} ${gasInd.changeText}`;
+                gasEl.style.color = gasInd.color;
+                gasEl.style.transition = 'all 0.5s ease';
+                gasEl.style.transform = 'scale(1.1)';
+                setTimeout(() => { gasEl.style.transform = 'scale(1)'; }, 500);
+            }
+            
+            // Update Heavy-Light Differential
+            const heavyInd = getIndicator(heavyLight, heavyLightChange);
+            const heavyEl = document.getElementById('market-heavylight');
+            if (heavyEl) {
+                heavyEl.textContent = `$${heavyLight.toFixed(2)}/bbl ${heavyInd.arrow} ${heavyInd.changeText}`;
+                heavyEl.style.color = heavyInd.color;
+                heavyEl.style.transition = 'all 0.5s ease';
+                heavyEl.style.transform = 'scale(1.1)';
+                setTimeout(() => { heavyEl.style.transform = 'scale(1)'; }, 500);
+            }
+            
+            // Update Brent-Dubai
+            const brentInd = getIndicator(brentDubai, brentDubaiChange);
+            const brentEl = document.getElementById('market-brentdubai');
+            if (brentEl) {
+                brentEl.textContent = `$${brentDubai.toFixed(2)}/bbl ${brentInd.arrow} ${brentInd.changeText}`;
+                brentEl.style.color = brentInd.color;
+                brentEl.style.transition = 'all 0.5s ease';
+                brentEl.style.transform = 'scale(1.1)';
+                setTimeout(() => { brentEl.style.transform = 'scale(1)'; }, 500);
+            }
+            
+            // Update WCS Discount
+            const wcsInd = getIndicator(wcsDiscount, wcsChange);
+            const wcsEl = document.getElementById('market-wcsdiscount');
+            if (wcsEl) {
+                wcsEl.textContent = `$${wcsDiscount.toFixed(2)}/bbl ${wcsInd.arrow} ${wcsInd.changeText}`;
+                wcsEl.style.color = wcsInd.color;
+                wcsEl.style.transition = 'all 0.5s ease';
+                wcsEl.style.transform = 'scale(1.1)';
+                setTimeout(() => { wcsEl.style.transform = 'scale(1)'; }, 500);
+            }
+            
+            // Update timestamp
+            if (document.getElementById('price-timestamp')) {
+                document.getElementById('price-timestamp').textContent = `Last updated: ${new Date().toLocaleString()}`;
+            }
+            
+            // Refresh dashboard calculations
+            updatePriceDisplays();  // Update Live Market Conditions displays
+            updateHotCrudesWithYields(currentConfig);
+            updateTopPerformer();
+            
+            // Show success message
+            const status = document.getElementById('updateStatus');
+            status.style.display = 'block';
+            status.style.background = '#d4edda';
+            status.style.color = '#155724';
+            status.innerHTML = `✅ Prices updated successfully at ${new Date().toLocaleTimeString()}`;
+            
+            setTimeout(() => {
+                status.style.display = 'none';
+            }, 3000);
         }
         
         // Custom Crude Functions
@@ -2657,7 +4068,7 @@
         
         function resetAssumptions() {
             // Reset to defaults
-            document.getElementById('baseCrudeCost').value = 75;
+            document.getElementById('baseCrudeCost').value = 60;
             document.getElementById('operatingCost').value = 5;
             document.getElementById('sulfurPenalty').value = 2;
             document.getElementById('apiBonus').value = 0.5;
@@ -2688,6 +4099,9 @@
         window.addEventListener('DOMContentLoaded', function() {
             try {
                 console.log('Initializing dashboard...');
+                updateAllDropdowns();  // Populate all dropdowns
+                updatePriceDisplays();  // Update Live Market Conditions displays
+                initializeMarketTrends();  // Initialize market trends with calculated values
                 updateHotCrudesWithYields('simple');
                 updateUpgradeEconomics();
                 updateTopPerformer();
@@ -2744,6 +4158,20 @@
                     select.value = currentValue; // Restore selection
                 }
             });
+            
+            // Update Target Crude dropdown for optimization
+            const targetSelect = document.getElementById('targetCrude');
+            if (targetSelect) {
+                const currentValue = targetSelect.value;
+                targetSelect.innerHTML = '<option value="">-- Custom Specs --</option>';
+                crudeDatabase.forEach(crude => {
+                    const option = document.createElement('option');
+                    option.value = crude.name;
+                    option.textContent = `${crude.name} - API: ${crude.api.toFixed(1)}°, S: ${crude.sulfur.toFixed(2)}%`;
+                    targetSelect.appendChild(option);
+                });
+                targetSelect.value = currentValue; // Restore selection
+            }
         }
     </script>
 </body>
