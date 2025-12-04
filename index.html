@@ -2599,9 +2599,17 @@
                 coke: actualYields.coke * volume
             };
             
-            // Calculate economics
+            // Calculate economics using actual crude prices
+            const baseAssumptions = getAssumptions();
+            const crudeFOBCost = crude.fobPrice || parseFloat(baseAssumptions.baseCrudeCost) || 60;
+            const transportCost = useCIFHouston ? (crude.transportCost || 0) : 0;
+            const operatingCost = parseFloat(baseAssumptions.operatingCost) || 5;
+            const sulfurPenalty = (parseFloat(baseAssumptions.sulfurPenalty) || 2) * crude.sulfur;
+            const apiBonus = crude.api > 30 ? (parseFloat(baseAssumptions.apiBonus) || 0.5) * (crude.api - 30) : 0;
+            
+            const totalCrudeCost = crudeFOBCost + transportCost + operatingCost + sulfurPenalty - apiBonus;
             const totalRevenue = result.revenue * volume;
-            const totalCost = 75 * volume; // Crude cost
+            const totalCost = totalCrudeCost * volume; // Using actual crude cost
             const totalMargin = result.margin * volume;
             
             // Generate results HTML
@@ -2640,6 +2648,50 @@
                                 <tr><td style="padding: 8px;"><strong>Min API:</strong></td><td>${minAPI}°</td></tr>
                             </table>
                         </div>
+                    </div>
+                    
+                    <h4 style="color: #34495e; margin: 30px 0 15px 0;">Cost Breakdown (per barrel)</h4>
+                    <div style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <table style="width: 100%; font-size: 0.95em;">
+                            <tr style="border-bottom: 2px solid #dee2e6;">
+                                <th style="text-align: left; padding: 10px;">Cost Component</th>
+                                <th style="text-align: right; padding: 10px;">$/bbl</th>
+                                <th style="text-align: right; padding: 10px;">Daily Total</th>
+                            </tr>
+                            <tr>
+                                <td style="padding: 8px;">FOB Crude Price</td>
+                                <td style="text-align: right; padding: 8px;">$${crudeFOBCost.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(crudeFOBCost * volume).toLocaleString()}</td>
+                            </tr>
+                            ${transportCost > 0 ? `
+                            <tr>
+                                <td style="padding: 8px;">Transportation (CIF Houston)</td>
+                                <td style="text-align: right; padding: 8px;">$${transportCost.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(transportCost * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            <tr>
+                                <td style="padding: 8px;">Operating Cost</td>
+                                <td style="text-align: right; padding: 8px;">$${operatingCost.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(operatingCost * volume).toLocaleString()}</td>
+                            </tr>
+                            ${sulfurPenalty > 0 ? `
+                            <tr>
+                                <td style="padding: 8px;">Sulfur Penalty (${crude.sulfur.toFixed(2)}% × $2/bbl)</td>
+                                <td style="text-align: right; padding: 8px; color: #dc3545;">$${sulfurPenalty.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px; color: #dc3545;">$${(sulfurPenalty * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            ${apiBonus > 0 ? `
+                            <tr>
+                                <td style="padding: 8px;">API Bonus (>${30}° × $0.50/bbl)</td>
+                                <td style="text-align: right; padding: 8px; color: #28a745;">-$${apiBonus.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px; color: #28a745;">-$${(apiBonus * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            <tr style="border-top: 2px solid #333; font-weight: bold;">
+                                <td style="padding: 10px;">Total Cost</td>
+                                <td style="text-align: right; padding: 10px;">$${totalCrudeCost.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 10px;">$${totalCost.toLocaleString()}</td>
+                            </tr>
+                        </table>
                     </div>
                     
                     <h4 style="color: #34495e; margin: 30px 0 15px 0;">Product Yields</h4>
@@ -2689,6 +2741,82 @@
                         </div>` : ''}
                     </div>
                     
+                    <h4 style="color: #34495e; margin: 30px 0 15px 0;">Product Revenue Breakdown</h4>
+                    <div style="background: #e8f5e9; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <table style="width: 100%; font-size: 0.95em;">
+                            <tr style="border-bottom: 2px solid #c8e6c9;">
+                                <th style="text-align: left; padding: 10px;">Product</th>
+                                <th style="text-align: right; padding: 10px;">Yield %</th>
+                                <th style="text-align: right; padding: 10px;">Price $/bbl</th>
+                                <th style="text-align: right; padding: 10px;">Revenue $/bbl crude</th>
+                                <th style="text-align: right; padding: 10px;">Daily Revenue</th>
+                            </tr>
+                            ${actualYields.lpg > 0.001 ? `
+                            <tr>
+                                <td style="padding: 8px;">LPG</td>
+                                <td style="text-align: right; padding: 8px;">${(actualYields.lpg * 100).toFixed(1)}%</td>
+                                <td style="text-align: right; padding: 8px;">$${marketPrices.lpg.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.lpg * marketPrices.lpg).toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.lpg * marketPrices.lpg * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            ${actualYields.naphtha > 0.001 ? `
+                            <tr>
+                                <td style="padding: 8px;">Naphtha</td>
+                                <td style="text-align: right; padding: 8px;">${(actualYields.naphtha * 100).toFixed(1)}%</td>
+                                <td style="text-align: right; padding: 8px;">$${marketPrices.naphtha.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.naphtha * marketPrices.naphtha).toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.naphtha * marketPrices.naphtha * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            ${actualYields.gasoline > 0.001 ? `
+                            <tr>
+                                <td style="padding: 8px;">Gasoline (87)</td>
+                                <td style="text-align: right; padding: 8px;">${(actualYields.gasoline * 100).toFixed(1)}%</td>
+                                <td style="text-align: right; padding: 8px;">$${marketPrices.gasoline87.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.gasoline * marketPrices.gasoline87).toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.gasoline * marketPrices.gasoline87 * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            ${actualYields.jet > 0.001 ? `
+                            <tr>
+                                <td style="padding: 8px;">Jet/Kerosene</td>
+                                <td style="text-align: right; padding: 8px;">${(actualYields.jet * 100).toFixed(1)}%</td>
+                                <td style="text-align: right; padding: 8px;">$${marketPrices.jet.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.jet * marketPrices.jet).toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.jet * marketPrices.jet * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            ${actualYields.diesel > 0.001 ? `
+                            <tr>
+                                <td style="padding: 8px;">Diesel (ULSD)</td>
+                                <td style="text-align: right; padding: 8px;">${(actualYields.diesel * 100).toFixed(1)}%</td>
+                                <td style="text-align: right; padding: 8px;">$${marketPrices.diesel50.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.diesel * marketPrices.diesel50).toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.diesel * marketPrices.diesel50 * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            ${actualYields.fuelOil > 0.001 ? `
+                            <tr>
+                                <td style="padding: 8px;">Fuel Oil (HSFO)</td>
+                                <td style="text-align: right; padding: 8px;">${(actualYields.fuelOil * 100).toFixed(1)}%</td>
+                                <td style="text-align: right; padding: 8px;">$${marketPrices.hsfo.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.fuelOil * marketPrices.hsfo).toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.fuelOil * marketPrices.hsfo * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            ${actualYields.coke > 0.001 ? `
+                            <tr>
+                                <td style="padding: 8px;">Pet Coke</td>
+                                <td style="text-align: right; padding: 8px;">${(actualYields.coke * 100).toFixed(1)}%</td>
+                                <td style="text-align: right; padding: 8px;">$${marketPrices.coke.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.coke * marketPrices.coke).toFixed(2)}</td>
+                                <td style="text-align: right; padding: 8px;">$${(actualYields.coke * marketPrices.coke * volume).toLocaleString()}</td>
+                            </tr>` : ''}
+                            <tr style="border-top: 2px solid #4caf50; font-weight: bold;">
+                                <td style="padding: 10px;">Total Revenue</td>
+                                <td style="text-align: right; padding: 10px;">100%</td>
+                                <td style="text-align: right; padding: 10px;">-</td>
+                                <td style="text-align: right; padding: 10px;">$${result.revenue.toFixed(2)}</td>
+                                <td style="text-align: right; padding: 10px;">$${totalRevenue.toLocaleString()}</td>
+                            </tr>
+                        </table>
+                    </div>
+                    
                     <h4 style="color: #34495e; margin: 30px 0 15px 0;">Economic Summary</h4>
                     <div style="background: linear-gradient(to right, #f8f9fa, #e9ecef); padding: 20px; border-radius: 10px;">
                         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; text-align: center;">
@@ -2708,6 +2836,41 @@
                                 <div style="font-size: 0.9em; color: #666;">Margin per Barrel</div>
                                 <div style="font-size: 1.5em; font-weight: bold; color: #6610f2;">$${result.margin.toFixed(2)}</div>
                             </div>
+                        </div>
+                    </div>
+                    
+                    <h4 style="color: #34495e; margin: 30px 0 15px 0;">Optimization Insights</h4>
+                    <div style="background: #f3e5f5; padding: 20px; border-radius: 10px;">
+                        ${result.margin < 5 ? `
+                        <div style="background: #ffebee; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong style="color: #c62828;">⚠️ Low Margin Alert:</strong> 
+                            This crude yields only $${result.margin.toFixed(2)}/bbl margin.
+                            Consider switching to lighter/sweeter crudes for this configuration.
+                        </div>` : ''}
+                        ${result.margin > 15 ? `
+                        <div style="background: #e8f5e9; padding: 15px; border-radius: 8px; margin-bottom: 15px;">
+                            <strong style="color: #2e7d32;">✅ Strong Economics:</strong> 
+                            This crude yields $${result.margin.toFixed(2)}/bbl margin.
+                            Well-suited for ${config} refinery configuration.
+                        </div>` : ''}
+                        ${crude.sulfur > maxSulfur || crude.api < minAPI ? `
+                        <div style="background: #fff8e1; padding: 15px; border-radius: 8px;">
+                            <strong style="color: #f57c00;">💡 Alternative Crudes to Consider:</strong>
+                            <ul style="margin: 10px 0 0 20px;">
+                                ${crude.sulfur > maxSulfur ? 
+                                    '<li>Lower sulfur options: Bonny Light, WTI, Brent, Saharan Blend</li>' : ''}
+                                ${crude.api < minAPI ? 
+                                    '<li>Higher API options: Tapis, Eagle Ford, Bonny Light, Saharan Blend</li>' : ''}
+                            </ul>
+                        </div>` : ''}
+                        <div style="margin-top: 15px; padding: 15px; background: white; border-radius: 8px;">
+                            <strong>Key Performance Metrics:</strong>
+                            <ul style="margin: 10px 0 0 20px;">
+                                <li>Gross Margin: ${((result.margin / result.revenue) * 100).toFixed(1)}%</li>
+                                <li>Operating Margin: ${((result.margin / totalCrudeCost) * 100).toFixed(1)}%</li>
+                                <li>Breakeven Oil Price: $${(totalCrudeCost - result.margin).toFixed(2)}/bbl</li>
+                                <li>Required Utilization for Breakeven: ${(totalCrudeCost / result.revenue * 100).toFixed(1)}%</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
